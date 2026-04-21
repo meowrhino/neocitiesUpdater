@@ -46,6 +46,7 @@ let currentExportTab = 'neocities';
 let editingId = null;
 let orphanSelection = new Set();
 let catManagerOpen = false;
+let studioTemplate = null; // plantilla de data.json (studio) — se carga de data/studio-snapshot.json
 
 function makeEmptyState() {
   return {
@@ -83,10 +84,16 @@ function loadState() {
     for (const p of s.projects) {
       p.links = p.links || [];
       if (!p.links.some(l => l.primary)) {
-        // marcar como primary el primer link que sea custom-domain (si lo hay) o el primero
         const primIdx = p.links.findIndex(l => inferLinkType(l.url) === 'custom-domain');
         if (primIdx >= 0) p.links[primIdx].primary = true;
       }
+      // migración: añadir nuevos flags de studio
+      p.showIn = p.showIn || {};
+      if (p.showIn.studioTools === undefined) p.showIn.studioTools = false;
+      if (p.showIn.studioConvert === undefined) p.showIn.studioConvert = false;
+      if (p.showIn.studioPortfolio === undefined) p.showIn.studioPortfolio = false;
+      if (p.studioImage === undefined) p.studioImage = '';
+      if (p.studioImageCount === undefined) p.studioImageCount = 0;
     }
     return s;
   } catch (_) { return null; }
@@ -260,7 +267,16 @@ function parseNeocitiesHtml(htmlString) {
         hidden: false,
         notes: '',
         sup: '',
-        showIn: { neocities: true, clouds: currentCategory !== 'hidden', archive: currentCategory !== 'hidden' },
+        showIn: {
+          neocities: true,
+          clouds: currentCategory !== 'hidden',
+          archive: currentCategory !== 'hidden',
+          studioTools: false,
+          studioConvert: false,
+          studioPortfolio: false,
+        },
+        studioImage: '',
+        studioImageCount: 0,
         links: [],
         ghRepo: null,
         hiddenStyle: isHiddenStyle,
@@ -398,6 +414,56 @@ function exportCloudsJson() {
       links: sortedLinks(p).map(l => l.url),
     }));
   }
+  return JSON.stringify(out, null, 2);
+}
+
+function exportStudioJson() {
+  if (!studioTemplate) {
+    return '// el template data/studio-snapshot.json no se ha cargado.\n// dale a "auto-cargar" en inicio, o importa manualmente.';
+  }
+  // deep clone el template
+  const out = JSON.parse(JSON.stringify(studioTemplate));
+
+  // tools.herramientas
+  const herramientas = state.projects
+    .filter(p => p.showIn?.studioTools && !p.hidden)
+    .map(p => ({
+      nombre: p.name,
+      url: (p.links.find(l => l.primary) || p.links[0] || {}).url || '',
+    }));
+  out.tools = out.tools || {};
+  out.tools.herramientas = herramientas;
+
+  // tools.conversores
+  const conversores = state.projects
+    .filter(p => p.showIn?.studioConvert && !p.hidden)
+    .map(p => ({
+      nombre: p.name,
+      url: (p.links.find(l => l.primary) || p.links[0] || {}).url || '',
+    }));
+  out.tools.conversores = conversores;
+
+  // portfolio.proyectos
+  const portfolio = state.projects
+    .filter(p => p.showIn?.studioPortfolio && !p.hidden)
+    .map(p => {
+      // si el proyecto tiene varios dominios/urls custom, los incluimos como `urls`
+      const customs = p.links.filter(l => inferLinkType(l.url) === 'custom-domain');
+      const base = {
+        nombre: p.name,
+        imagen: p.studioImage || '',
+        imagenesSecundarias: Number(p.studioImageCount) || 0,
+      };
+      if (customs.length >= 2) {
+        base.urls = customs.map(l => ({ nombre: l.label || p.name, url: l.url }));
+      } else {
+        base.url = (customs[0] || p.links.find(l => l.primary) || p.links[0] || {}).url || '';
+      }
+      return base;
+    });
+  out.portfolio = out.portfolio || {};
+  out.portfolio.proyectos = portfolio;
+
   return JSON.stringify(out, null, 2);
 }
 
@@ -627,7 +693,19 @@ function renderProjectEdit(p) {
   f.siNeo     = chkbox('publicar en neocities', p.showIn?.neocities !== false);
   f.siCloud   = chkbox('publicar en clouds', p.showIn?.clouds !== false);
   f.siArch    = chkbox('publicar en archive', p.showIn?.archive !== false);
+  f.siStTool  = chkbox('studio · tools (herramientas)', !!p.showIn?.studioTools);
+  f.siStConv  = chkbox('studio · tools (conversores)', !!p.showIn?.studioConvert);
+  f.siStPort  = chkbox('studio · portfolio', !!p.showIn?.studioPortfolio);
   box.appendChild(el('div', { class: 'full row' }, f.highlight.lbl, f.hidden.lbl, f.siNeo.lbl, f.siCloud.lbl, f.siArch.lbl));
+  box.appendChild(el('div', { class: 'full row' }, f.siStTool.lbl, f.siStConv.lbl, f.siStPort.lbl));
+
+  // campos específicos de studio portfolio
+  f.stImg     = makeInput('studio portfolio · imagen (ej. img/slug/1.webp)', p.studioImage || '');
+  f.stImgN    = makeInput('studio portfolio · nº imágenes secundarias', String(p.studioImageCount || 0));
+  const stBox = el('div', { class: 'full row' }, f.stImg.lbl, f.stImgN.lbl);
+  f.stImg.lbl.style.flex = '2';
+  f.stImgN.lbl.style.flex = '1';
+  box.appendChild(stBox);
 
   // links editor
   const linksBox = el('div', { class: 'full links-editor' });
@@ -682,7 +760,12 @@ function renderProjectEdit(p) {
       neocities: f.siNeo.input.checked,
       clouds: f.siCloud.input.checked,
       archive: f.siArch.input.checked,
+      studioTools: f.siStTool.input.checked,
+      studioConvert: f.siStConv.input.checked,
+      studioPortfolio: f.siStPort.input.checked,
     };
+    p.studioImage = f.stImg.input.value.trim();
+    p.studioImageCount = parseInt(f.stImgN.input.value, 10) || 0;
     p.links = links.filter(l => l.url.trim());
     if (!p.links.some(l => l.primary) && p.links.length) p.links[0].primary = true;
     editingId = null;
@@ -726,7 +809,9 @@ function newProject() {
     hidden: false,
     notes: '',
     sup: '',
-    showIn: { neocities: true, clouds: true, archive: true },
+    showIn: { neocities: true, clouds: true, archive: true, studioTools: false, studioConvert: false, studioPortfolio: false },
+    studioImage: '',
+    studioImageCount: 0,
     links: [{ label: 'link', url: '', primary: true }],
     ghRepo: null,
     hiddenStyle: false,
@@ -1128,7 +1213,9 @@ function addProjectFromRepo(repo, category) {
     hidden: false,
     notes: repo.description || '',
     sup: '',
-    showIn: { neocities: true, clouds: true, archive: true },
+    showIn: { neocities: true, clouds: true, archive: true, studioTools: false, studioConvert: false, studioPortfolio: false },
+    studioImage: '',
+    studioImageCount: 0,
     links: [{ label: 'link', url: `https://meowrhino.github.io/${repo.name}/`, primary: true }],
     ghRepo: repo.name,
     hiddenStyle: false,
@@ -1221,10 +1308,13 @@ async function checkAll(onlyCustom = false) {
 
 function regenExport() {
   let out = '';
-  if (currentExportTab === 'neocities') out = exportNeocitiesHtml();
-  else if (currentExportTab === 'clouds') out = exportCloudsJson();
-  else if (currentExportTab === 'archive') out = exportArchiveJson();
+  let help = '';
+  if (currentExportTab === 'neocities') { out = exportNeocitiesHtml(); help = 'pega el contenido entero en el editor del neocities y dale a save.'; }
+  else if (currentExportTab === 'clouds') { out = exportCloudsJson(); help = 'sobreescribe clouds/proyectos.json (o deja que la GH Action lo haga cada semana).'; }
+  else if (currentExportTab === 'archive') { out = exportArchiveJson(); help = 'sobreescribe becasDigMeow/archive-data.json.'; }
+  else if (currentExportTab === 'studio')  { out = exportStudioJson();  help = 'sobreescribe becasDigMeow/data.json. preserva cupon, statement, metodología, políticas, contacto.'; }
   $('#export-output').textContent = out;
+  const h = $('#export-help'); if (h) h.textContent = help;
 }
 
 async function copyExport() {
@@ -1238,7 +1328,8 @@ function downloadExport() {
   const content = $('#export-output').textContent;
   const name = currentExportTab === 'neocities' ? 'index.html'
     : currentExportTab === 'clouds' ? 'proyectos.json'
-    : 'archive-data.json';
+    : currentExportTab === 'archive' ? 'archive-data.json'
+    : 'data.json';
   const type = currentExportTab === 'neocities' ? 'text/html' : 'application/json';
   const blob = new Blob([content], { type });
   const a = document.createElement('a');
@@ -1287,7 +1378,49 @@ function toggleTheme() {
 
 /* -------------------- seed -------------------- */
 
+async function loadStudioTemplate() {
+  try {
+    const r = await fetch('data/studio-snapshot.json', { cache: 'no-store' });
+    if (!r.ok) return;
+    studioTemplate = await r.json();
+  } catch (_) { /* ignore */ }
+}
+
+function mergeStudioFlags() {
+  if (!studioTemplate) return 0;
+  let hits = 0;
+  const byUrl = new Map(); // url.toLowerCase() → {section, entry}
+  const add = (section, entry, url) => {
+    if (!url) return;
+    byUrl.set(String(url).toLowerCase(), { section, entry });
+  };
+  for (const e of studioTemplate.tools?.herramientas || []) add('studioTools', e, e.url);
+  for (const e of studioTemplate.tools?.conversores || []) add('studioConvert', e, e.url);
+  for (const e of studioTemplate.portfolio?.proyectos || []) {
+    if (e.url) add('studioPortfolio', e, e.url);
+    if (Array.isArray(e.urls)) for (const u of e.urls) add('studioPortfolio', e, u.url);
+  }
+  for (const p of state.projects) {
+    for (const l of p.links) {
+      const key = String(l.url).toLowerCase();
+      if (byUrl.has(key)) {
+        const { section, entry } = byUrl.get(key);
+        p.showIn[section] = true;
+        if (section === 'studioPortfolio' && entry.imagen && !p.studioImage) {
+          p.studioImage = entry.imagen;
+          p.studioImageCount = Number(entry.imagenesSecundarias) || 0;
+        }
+        hits++;
+      }
+    }
+  }
+  return hits;
+}
+
 async function tryFetchSeed() {
+  // template de studio primero (para poder mergear después)
+  await loadStudioTemplate();
+
   try {
     const r = await fetch('data/seed.json', { cache: 'no-store' });
     if (r.ok) {
@@ -1308,10 +1441,11 @@ async function tryFetchSeed() {
     const html = await r.text();
     const s = parseNeocitiesHtml(html);
     state = s;
+    const hits = mergeStudioFlags();
     saveState();
     updateDashboard();
     renderProjects();
-    toast(`cargados ${s.projects.length} proyectos desde neocities`);
+    toast(`${s.projects.length} proyectos · ${hits} vinculados a studio`);
   } catch (e) {
     toast('pega el HTML del neocities o importa un .json');
   }
@@ -1338,6 +1472,8 @@ function init() {
   updateStatusLine();
   updateDashboard();
   wireAuditorRules();
+  // template de studio en background (aunque ya haya state)
+  loadStudioTemplate();
 
   $('#btn-parse-html').addEventListener('click', parseHtmlFromTextarea);
   $('#btn-fetch-seed').addEventListener('click', tryFetchSeed);

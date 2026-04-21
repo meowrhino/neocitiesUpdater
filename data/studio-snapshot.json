@@ -1,0 +1,309 @@
+{
+  "welcome": {
+    "titulo": "meowrhino studio",
+    "cupon": {
+      "precio": "485 €",
+      "email": "hola@meowrhino.studio",
+      "es": {
+        "hazte": "tu propia web por",
+        "iva": "(iva no incluido)",
+        "caduca": "válido hasta finales de agosto",
+        "subject": "quiero una web!",
+        "incluye": "diseño a medida, sin servidores ni suscripciones. te enseñamos a mantenerla tú mismo.",
+        "primera": "primera reunión gratis",
+        "cta": "escríbeme"
+      },
+      "en": {
+        "hazte": "your own website for",
+        "iva": "(vat not included)",
+        "caduca": "valid until the end of august",
+        "subject": "I want a website!",
+        "incluye": "custom design, no servers or subscriptions. we teach you to maintain it yourself.",
+        "primera": "first meeting free",
+        "cta": "let's talk"
+      },
+      "cat": {
+        "hazte": "la teva pròpia web per",
+        "iva": "(iva no inclòs)",
+        "caduca": "vàlid fins a finals d'agost",
+        "subject": "vull una web!",
+        "incluye": "disseny a mida, sense servidors ni subscripcions. t'ensenyem a mantenir-la tu mateix.",
+        "primera": "primera reunió gratis",
+        "cta": "escriu-me"
+      }
+    },
+    "formateadores": [
+      {
+        "nombre": "paula",
+        "url": "https://meowrhino.github.io/paulabarjau/formateador.html"
+      },
+      {
+        "nombre": "miranda",
+        "url": "https://meowrhino.github.io/mirandaperezhita/formateador.html"
+      },
+      {
+        "nombre": "andrea",
+        "url": "https://meowrhino.github.io/andreacarilla/formateador.html"
+      },
+      {
+        "nombre": "jaume",
+        "url": "https://meowrhino.github.io/jaumeclotet/formateador.html"
+      }
+    ]
+  },
+  "tools": {
+    "herramientas": [
+      {
+        "nombre": "trackr",
+        "url": "https://meowrhino.github.io/trackr/"
+      },
+      {
+        "nombre": "colorfun",
+        "url": "https://meowrhino.github.io/colorFun/"
+      },
+      {
+        "nombre": "calculadora impuestos",
+        "url": "https://meowrhino.github.io/calculadoraInversa/"
+      },
+      {
+        "nombre": "generador facturas",
+        "url": "https://meowrhino.github.io/generadorFacturas/"
+      }
+    ],
+    "conversores": [
+      {
+        "nombre": "imgToWeb",
+        "url": "https://meowrhino.github.io/imgToWeb/"
+      },
+      {
+        "nombre": "videoToWeb",
+        "url": "https://meowrhino.github.io/videoToWeb/"
+      }
+    ]
+  },
+  "statement": {
+    "es": {
+      "lineas": [
+        "somos un estudio de diseño web en Barcelona",
+        "hacemos webs porque queremos conseguir un internet más común, cercano y divertido",
+        "capacitamos al cliente para el mantenimiento de su proyecto",
+        "buscamos un vínculo distinto con nuestros espacios digitales",
+        "pensamos fuera de la caja",
+        "evitamos las mensualidades innecesarias"
+      ]
+    },
+    "en": {
+      "lineas": [
+        "we are a web design studio in Barcelona",
+        "we make websites because we want a more communal, approachable and fun internet",
+        "we empower clients to maintain their own projects",
+        "we seek a different relationship with our digital spaces",
+        "we think outside the box",
+        "we avoid unnecessary subscriptions"
+      ]
+    },
+    "cat": {
+      "lineas": [
+        "som un estudi de disseny web a Barcelona",
+        "fem webs perquè volem aconseguir un internet més comú, proper i divertit",
+        "capacitem el client per al manteniment del seu projecte",
+        "busquem un vincle diferent amb els nostres espais digitals",
+        "pensem fora de la caixa",
+        "evitem les mensualitats innecessàries"
+      ]
+    }
+  },
+  "metodologia": {
+    "es": {
+      "lineas": [
+        "empezamos con una primera reunión gratuita. trae 3–5 referentes de cosas que te gusten o no te gusten: pueden ser webs, otras interfaces o incluso bocetos. revisamos juntos el material y hablamos de estructura, estética y presupuesto.",
+        "a partir de ahí elaboramos una propuesta de diseño. te damos tiempo para pensarlo con calma. cuando estés conforme y se haga el primer pago (50%), empezamos a programar.",
+        "a lo largo del proyecto tienes hasta 3 rondas de revisiones. cada ronda puede incluir varios ajustes. el diseño también se adapta cuando pasa del boceto a una web funcional que se vea bien en distintos dispositivos. solemos tardar 1–2 semanas en diseño y 1–2 semanas en programación.",
+        "con el código aprobado y el segundo pago (50%), nos vemos en una última reunión para preparar tu dispositivo: aprenderás a actualizar la web tú mismo. si lo necesitas, también configuramos tu dominio (recomendamos cloudflare).",
+        "tras la entrega tienes 2 semanas para reportar errores o usar las rondas de revisión que te queden. pasado ese periodo, los cambios se facturan a 60€/hora."
+      ]
+    },
+    "en": {
+      "lineas": [
+        "we start with a free first meeting. bring 3–5 references of things you like or don't like: they can be websites, other interfaces, or even sketches. we go through the material together and talk about structure, aesthetics, and budget.",
+        "from there, we put together a design proposal. we give you time to think it over. once you're happy with it and the first payment is made (50%), we start coding.",
+        "throughout the project you have up to 3 rounds of revisions. each round can include several adjustments. the design also adapts as it goes from mockup to a working website that looks good on different devices. we usually take 1–2 weeks for design and 1–2 weeks for development.",
+        "once the code is approved and the second payment is made (50%), we meet one last time to set up your device: you'll learn to update the website yourself. if you need it, we also configure your domain (we recommend cloudflare).",
+        "after delivery you have 2 weeks to report bugs or use any remaining revision rounds. after that period, changes are billed at 60€/hour."
+      ]
+    },
+    "cat": {
+      "lineas": [
+        "comencem amb una primera reunió gratuïta. porta 3–5 referents de coses que t'agradin o no t'agradin: poden ser webs, altres interfícies o fins i tot esbossos. revisem junts el material i parlem d'estructura, estètica i pressupost.",
+        "a partir d'aquí elaborem una proposta de disseny. et donem temps per pensar-ho amb calma. quan estiguis conforme i es faci el primer pagament (50%), comencem a programar.",
+        "al llarg del projecte tens fins a 3 rondes de revisions. cada ronda pot incloure diversos ajustos. el disseny també s'adapta quan passa de l'esbós a una web funcional que es vegi bé en diferents dispositius. solem trigar 1–2 setmanes en disseny i 1–2 setmanes en programació.",
+        "amb el codi aprovat i el segon pagament (50%), ens veiem en una última reunió per preparar el teu dispositiu: aprendràs a actualitzar la web tu mateix. si ho necessites, també configurem el teu domini (recomanem cloudflare).",
+        "després del lliurament tens 2 setmanes per reportar errors o fer servir les rondes de revisió que et quedin. passat aquest període, els canvis es facturen a 60€/hora."
+      ]
+    }
+  },
+  "politicas": {
+    "es": {
+      "parrafos": [
+        "diseñamos y desarrollamos páginas web a medida con tecnología jamstack. los datos de tu web los gestiona un archivo que aprendes a leer y modificar: puedes añadir, eliminar y cambiar textos, imágenes y archivos sin depender de nadie.",
+        "el código es tuyo. puedes usarlo, transformarlo, continuarlo o dárselo a quien quieras. meowrhino.studio conserva una copia de cada proyecto como registro de autoría y para garantizar que el código sea siempre libre y accesible.",
+        "no iniciamos un proyecto sin todo el material listo: textos, imágenes y contenido. también una identidad visual mínima (logo, paleta de color, tipografía). si no se dispone de ella, se puede presupuestar como parte del proyecto.",
+        "no trabajamos con placeholders.",
+        "cada proyecto incluye 2 entregas (diseño y código) y hasta 3 rondas de revisiones. cada ronda puede incluir varios cambios, pero una vez enviada, los siguientes cambios pertenecen a la siguiente ronda. cualquier cambio derivado de trabajar con material incompleto cuenta como revisión. las rondas extra se presupuestan a 60€/hora.",
+        "pago en dos fases: 50% al cerrar diseño, 50% al finalizar programación.",
+        "la primera reunión es gratuita. a partir de la primera entrega se consume parte del presupuesto. puedes parar el proyecto en cualquier momento abonando la parte proporcional de lo trabajado. si se retoma más adelante, se abre un nuevo presupuesto.",
+        "nos reservamos la posibilidad de publicar el proyecto en nuestro portfolio y redes sociales. a la finalización de la web, planteamos la posibilidad de un post conjunto en instagram.",
+        "nuestro compromiso es diseñar una web que entiendas, que puedas mantener y que pueda crecer contigo."
+      ],
+      "nota": "aceptar el presupuesto significa aceptar estas condiciones."
+    },
+    "en": {
+      "parrafos": [
+        "we design and develop custom websites using jamstack technology. your website data is managed through a file you learn to read and edit: you can add, remove and change texts, images and files without depending on anyone.",
+        "the code is yours. you can use it, transform it, continue it or give it to whoever you want. meowrhino.studio keeps a copy of each project as a record of authorship and to ensure the code remains free and accessible.",
+        "we do not start a project without all the material ready: texts, images and content. also a minimal visual identity (logo, colour palette, typography). if you don't have one, it can be quoted as part of the project.",
+        "we don't work with placeholders.",
+        "each project includes 2 deliveries (design and code) and up to 3 rounds of revisions. each round may include several changes, but once submitted, subsequent changes belong to the next round. any change resulting from working with incomplete material counts as a revision. extra rounds are billed at 60€/hour.",
+        "payment in two phases: 50% upon design sign-off, 50% upon completing development.",
+        "the first meeting is free. from the first delivery onwards, part of the budget is used. you can stop the project at any time by paying the proportional share of the work done. if resumed later, a new quote is provided.",
+        "we reserve the option to publish the project in our portfolio and social media. upon completion of the website, we'll suggest a joint instagram post.",
+        "our commitment is to design a website you understand, can maintain, and that can grow with you."
+      ],
+      "nota": "accepting the quote means accepting these conditions."
+    },
+    "cat": {
+      "parrafos": [
+        "dissenyem i desenvolupem pàgines web a mida amb tecnologia jamstack. les dades de la teva web les gestiona un arxiu que aprens a llegir i modificar: pots afegir, eliminar i canviar textos, imatges i arxius sense dependre de ningú.",
+        "el codi és teu. pots usar-lo, transformar-lo, continuar-lo o donar-lo a qui vulguis. meowrhino.studio conserva una còpia de cada projecte com a registre d'autoria i per garantir que el codi sigui sempre lliure i accessible.",
+        "no iniciem un projecte sense tot el material llest: textos, imatges i contingut. també una identitat visual mínima (logo, paleta de color, tipografia). si no es disposa d'ella, es pot pressupostar com a part del projecte.",
+        "no treballem amb placeholders.",
+        "cada projecte inclou 2 lliuraments (disseny i codi) i fins a 3 rondes de revisions. cada ronda pot incloure diversos canvis, però un cop enviada, els canvis següents pertanyen a la ronda següent. qualsevol canvi derivat de treballar amb material incomplet compta com a revisió. les rondes extra es pressuposten a 60€/hora.",
+        "pagament en dues fases: 50% en tancar disseny, 50% en finalitzar programació.",
+        "la primera reunió és gratuïta. a partir del primer lliurament es consumeix part del pressupost. pots aturar el projecte en qualsevol moment abonant la part proporcional del treball fet. si es reprèn més endavant, s'obre un nou pressupost.",
+        "ens reservem la possibilitat de publicar el projecte al nostre portfolio i xarxes socials. en finalitzar la web, plantegem la possibilitat d'un post conjunt a instagram.",
+        "el nostre compromís és dissenyar una web que entenguis, que puguis mantenir i que pugui créixer amb tu."
+      ],
+      "nota": "acceptar el pressupost significa acceptar aquestes condicions."
+    }
+  },
+  "portfolio": {
+    "proyectos": [
+      {
+        "nombre": "rikamichie",
+        "imagen": "img/rikamichie/1.webp",
+        "imagenesSecundarias": 2,
+        "url": "https://rikamichie.com"
+      },
+      {
+        "nombre": "andrea carilla",
+        "imagen": "img/andreacarilla/1.webp",
+        "imagenesSecundarias": 1,
+        "url": "https://andreacarilla.work"
+      },
+      {
+        "nombre": "diego san marcos",
+        "imagen": "img/diegosanmarcos/1.webp",
+        "imagenesSecundarias": 2,
+        "url": "https://diegosanmarcos.com"
+      },
+      {
+        "nombre": "mike bros",
+        "imagen": "img/mikebros/1.webp",
+        "imagenesSecundarias": 1,
+        "url": "https://mikebros.com"
+      },
+      {
+        "nombre": "miranda",
+        "imagen": "img/miranda/1.webp",
+        "imagenesSecundarias": 2,
+        "url": "https://mirandaperezhita.com"
+      },
+      {
+        "nombre": "conor",
+        "imagen": "img/conor/1.webp",
+        "imagenesSecundarias": 2,
+        "url": "https://conorashlee.com"
+      },
+      {
+        "nombre": "vicios torpes",
+        "imagen": "img/viciostorpes/1.webp",
+        "imagenesSecundarias": 2,
+        "url": "https://viciostorpes.com"
+      },
+      {
+        "nombre": "maxito",
+        "imagen": "img/maxito/1.webp",
+        "imagenesSecundarias": 0,
+        "url": "https://maxazemar.com"
+      },
+      {
+        "nombre": "mokakopaTwins",
+        "imagen": "img/mokakopatwins/1.webp",
+        "imagenesSecundarias": 3,
+        "urls": [
+          { "nombre": "ana lópez", "url": "https://analopezserrano.com" },
+          { "nombre": "mokakopa", "url": "https://mokakopa.com" }
+        ]
+      },
+      {
+        "nombre": "noan cittadino",
+        "imagen": "img/noan/1.webp",
+        "imagenesSecundarias": 2,
+        "url": "https://noancittadino.com"
+      },
+      {
+        "nombre": "930blurberrie",
+        "imagen": "img/blurberrie/1.webp",
+        "imagenesSecundarias": 2,
+        "url": "https://930blurberrie.com"
+      },
+      {
+        "nombre": "paula barjau",
+        "imagen": "img/paulabarjau/1.webp",
+        "imagenesSecundarias": 2,
+        "url": "https://paulabarjau.studio"
+      },
+      {
+        "nombre": "estructuras3000",
+        "imagen": "img/estructuras3000/1.webp",
+        "imagenesSecundarias": 2,
+        "url": "https://estructuras3000.com"
+      },
+      {
+        "nombre": "berta esteve",
+        "imagen": "img/bertaesteve/1.webp",
+        "imagenesSecundarias": 1,
+        "url": "https://bertaesteve.cat"
+      },
+      {
+        "nombre": "jaume clotet",
+        "imagen": "img/jaumeclotet/1.webp",
+        "imagenesSecundarias": 1,
+        "url": "https://jaumeclotet.com"
+      },
+      {
+        "nombre": "el mundo de las jordis",
+        "imagen": "img/elmundodelasjordis/1.webp",
+        "imagenesSecundarias": 1,
+        "url": "https://elmundodelasjordis.com"
+      }
+    ]
+  },
+  "contacto": {
+    "email": "hola@meowrhino.studio",
+    "asunto": {
+      "es": "quiero una web!",
+      "en": "I want a website!",
+      "cat": "vull una web!"
+    },
+    "instagram": {
+      "usuario": "@meowrhino",
+      "url": "https://instagram.com/meowrhino"
+    },
+    "cv": {
+      "es": "cv_manu_es.pdf",
+      "en": "cv_manu_en.pdf",
+      "cat": "cv_manu_ca.pdf"
+    }
+  }
+}
