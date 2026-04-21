@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>neocitiesUpdater — meowrhino</title>
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+  <link rel="icon" href="favicon/favicon.ico">
   <link rel="stylesheet" href="style.css">
 </head>
 <body data-theme="dark">
@@ -15,43 +19,47 @@
       <span class="subtle" id="status-line">cargando…</span>
     </div>
     <nav class="tabs">
-      <button class="tab-btn active" data-tab="dashboard">dashboard</button>
-      <button class="tab-btn" data-tab="projects">projects</button>
-      <button class="tab-btn" data-tab="auditor">auditor · gh</button>
-      <button class="tab-btn" data-tab="health">health</button>
-      <button class="tab-btn" data-tab="export">export</button>
+      <button class="tab-btn active" data-tab="dashboard">inicio</button>
+      <button class="tab-btn" data-tab="projects">proyectos</button>
+      <button class="tab-btn" data-tab="auditor">revisar github</button>
+      <button class="tab-btn" data-tab="health">chequear enlaces</button>
+      <button class="tab-btn" data-tab="export">publicar</button>
     </nav>
     <div class="actions">
-      <button id="btn-import" title="import master JSON">↑ import</button>
-      <button id="btn-export-json" title="export master JSON">↓ export</button>
-      <button id="btn-theme" title="toggle theme">◐</button>
+      <button id="btn-import" title="importar datos (.json)">↑ importar</button>
+      <button id="btn-export-json" title="guardar copia (.json)">↓ backup</button>
+      <button id="btn-theme" title="cambiar tema">◐</button>
     </div>
   </header>
 
   <main>
 
-    <!-- DASHBOARD -->
+    <!-- INICIO -->
     <section id="tab-dashboard" class="tab-panel active">
       <div class="stats">
         <div class="stat"><b id="stat-total">0</b><span>proyectos</span></div>
-        <div class="stat"><b id="stat-gh">0</b><span>github-pages</span></div>
-        <div class="stat"><b id="stat-custom">0</b><span>custom domain</span></div>
-        <div class="stat"><b id="stat-external">0</b><span>external</span></div>
-        <div class="stat"><b id="stat-hidden">0</b><span>hidden</span></div>
-        <div class="stat warn"><b id="stat-orphans">—</b><span>huérfanos gh</span></div>
-        <div class="stat warn"><b id="stat-dead">—</b><span>links rotos</span></div>
+        <div class="stat"><b id="stat-gh">0</b><span>en github pages</span></div>
+        <div class="stat"><b id="stat-custom">0</b><span>con dominio propio</span></div>
+        <div class="stat"><b id="stat-external">0</b><span>externos</span></div>
+        <div class="stat"><b id="stat-hidden">0</b><span>escondidos</span></div>
+        <div class="stat warn"><b id="stat-orphans">—</b><span>faltan en la lista</span></div>
+        <div class="stat warn"><b id="stat-dead">—</b><span>enlaces rotos</span></div>
       </div>
 
       <div id="seed-prompt" class="panel" hidden>
-        <h2>empezar</h2>
-        <p>no hay datos. puedes (a) pegar el <code>index.html</code> del neocities aquí para parsearlo, (b) importar un master JSON previo, o (c) empezar vacío.</p>
+        <h2>¡hola! vamos a empezar</h2>
+        <p>todavía no hay datos cargados. tres opciones:</p>
+        <ul>
+          <li><b>pegar el html</b> del neocities en la caja de abajo y darle al botón → se parsea automáticamente</li>
+          <li><b>intentar auto-cargar</b> → funciona si estás usando Live Server o python http.server sobre esta carpeta</li>
+          <li><b>empezar vacío</b> → para crear proyectos desde cero</li>
+        </ul>
         <textarea id="seed-html" placeholder="pega aquí el <html>…</html> del neocities"></textarea>
         <div class="row">
-          <button id="btn-parse-html">parsear html → master</button>
-          <button id="btn-fetch-seed">intentar auto-cargar (fetch)</button>
+          <button id="btn-parse-html">parsear html</button>
+          <button id="btn-fetch-seed">auto-cargar</button>
           <button id="btn-empty">empezar vacío</button>
         </div>
-        <p class="subtle">auto-carga: intenta leer <code>data/seed.json</code> si lo sirve Live Server.</p>
       </div>
 
       <div class="panel">
@@ -60,29 +68,29 @@
       </div>
 
       <div class="panel">
-        <h2>ayuda rápida</h2>
+        <h2>cómo funciona</h2>
         <ul class="help">
-          <li><b>projects</b> — edita nombre, categoría, tipo, estado, links. drag & drop para reordenar.</li>
-          <li><b>auditor · gh</b> — fetchea los repos de <code>github.com/meowrhino</code> y marca los que no están listados. las reglas de "ocultar" se configuran ahí.</li>
-          <li><b>health</b> — pinga los links y muestra cuáles responden. útil para detectar dominios caídos.</li>
-          <li><b>export</b> — genera los 3 outputs: <code>neocities/index.html</code>, <code>clouds/proyectos.json</code>, <code>archive-data.json</code>. botón de copiar al portapapeles.</li>
-          <li>todo se persiste en <code>localStorage</code>. usa import/export JSON arriba para backups.</li>
+          <li><b>proyectos</b> — ves la lista entera, la editas, la reordenas arrastrando, o mueves cosas entre categorías.</li>
+          <li><b>revisar github</b> — la app llama a los repos de <code>github.com/meowrhino</code>, compara con tu lista, y te dice cuáles te faltan por añadir. Ahí también los añades con un clic.</li>
+          <li><b>chequear enlaces</b> — pasa un test a cada link. útil para ver si algún dominio de cliente ha caído.</li>
+          <li><b>publicar</b> — te genera los tres archivos listos para copiar y pegar: el <code>index.html</code> del neocities, el <code>proyectos.json</code> de clouds y el <code>archive-data.json</code> del archive.</li>
+          <li>Todo se guarda solo en tu navegador (<code>localStorage</code>). Usa <b>↓ backup</b> de arriba para hacerte una copia en .json de vez en cuando.</li>
         </ul>
       </div>
     </section>
 
-    <!-- PROJECTS -->
+    <!-- PROYECTOS -->
     <section id="tab-projects" class="tab-panel">
       <div class="toolbar">
-        <input type="search" id="proj-search" placeholder="buscar por nombre, slug, dominio, url…">
+        <input type="search" id="proj-search" placeholder="buscar…">
         <select id="proj-filter-cat"><option value="">todas las categorías</option></select>
         <select id="proj-filter-type">
           <option value="">todos los tipos</option>
-          <option value="github-pages">github-pages</option>
-          <option value="custom-domain">custom-domain</option>
-          <option value="external">external</option>
-          <option value="neocities-asset">neocities-asset</option>
-          <option value="local-page">local-page</option>
+          <option value="github-pages">github pages</option>
+          <option value="custom-domain">dominio propio</option>
+          <option value="external">externo</option>
+          <option value="neocities-asset">neocities (archivos)</option>
+          <option value="local-page">página local</option>
         </select>
         <select id="proj-filter-status">
           <option value="">todos los estados</option>
@@ -92,67 +100,78 @@
           <option value="beta">beta</option>
           <option value="deprecated">deprecated</option>
         </select>
-        <label class="chk"><input type="checkbox" id="proj-filter-hidden"> ver ocultos</label>
-        <button id="btn-new-project">+ nuevo</button>
+        <button id="btn-new-project">+ nuevo proyecto</button>
+        <button id="btn-manage-cats">gestionar categorías</button>
       </div>
+
+      <div id="cat-manager" class="panel" hidden></div>
 
       <div id="projects-list" class="projects"></div>
     </section>
 
-    <!-- AUDITOR -->
+    <!-- REVISAR GITHUB -->
     <section id="tab-auditor" class="tab-panel">
       <div class="toolbar">
-        <button id="btn-fetch-gh">fetch github repos</button>
+        <button id="btn-fetch-gh">traer repos de github</button>
         <span id="gh-status" class="subtle"></span>
       </div>
 
       <div class="panel">
-        <h2>reglas para ignorar repos</h2>
-        <p class="subtle">los repos que cumplan alguna regla no salen como "huérfanos".</p>
-        <label class="chk"><input type="checkbox" id="rule-forks" checked> ignorar forks</label>
-        <label class="chk"><input type="checkbox" id="rule-archived" checked> ignorar archived</label>
-        <label class="chk"><input type="checkbox" id="rule-deprecated" checked> ignorar los que acaben en <code>_DEPRECATED</code></label>
-        <label class="chk"><input type="checkbox" id="rule-test"> ignorar los que contengan <code>test</code>/<code>prueba</code>/<code>xxx</code></label>
+        <h2>qué repos ignorar</h2>
+        <p class="subtle">los que cumplan alguna condición no salen en la lista de "me faltan por añadir".</p>
+        <label class="chk"><input type="checkbox" id="rule-forks" checked> ignorar forks (repos que copiaste de otra gente)</label>
+        <label class="chk"><input type="checkbox" id="rule-archived" checked> ignorar archivados</label>
+        <label class="chk"><input type="checkbox" id="rule-deprecated" checked> ignorar los que terminan en <code>_DEPRECATED</code></label>
+        <label class="chk"><input type="checkbox" id="rule-test"> ignorar los que contienen <code>test</code> / <code>prueba</code> / <code>xxx</code></label>
         <div class="row">
-          <label>lista blanca manual (separar por coma):</label>
+          <label>lista manual (separa con comas):</label>
           <input type="text" id="rule-whitelist" placeholder="repo-a-ignorar, otro-repo…">
         </div>
       </div>
 
       <div class="panel">
-        <h2>huérfanos · repos en gh que faltan en el JSON</h2>
+        <h2>me faltan por añadir · <span id="orphan-count" class="subtle">0</span></h2>
+        <p class="subtle">repos que existen en github pero no los tienes en la lista. puedes seleccionar varios y añadirlos a un proyecto existente (útil para versiones <code>v1</code>/<code>v2</code>/<code>v3</code>), o añadir cada uno como proyecto nuevo.</p>
+        <div class="row" id="orphan-batch-bar" hidden>
+          <span id="orphan-selected-count">0 seleccionados</span>
+          <select id="orphan-batch-target"><option value="__new__">crear proyecto nuevo</option></select>
+          <input type="text" id="orphan-batch-name" placeholder="nombre (si es nuevo)">
+          <select id="orphan-batch-cat"></select>
+          <button id="btn-orphan-batch-add">añadir</button>
+          <button id="btn-orphan-batch-ignore">ignorar todos</button>
+        </div>
         <div id="orphans-list" class="orphans"></div>
       </div>
 
       <div class="panel">
-        <h2>muertos · proyectos que apuntan a repos gh que ya no existen</h2>
+        <h2>enlaces a repos que ya no existen · <span id="dead-count" class="subtle">0</span></h2>
         <div id="deadrepos-list" class="orphans"></div>
       </div>
     </section>
 
-    <!-- HEALTH -->
+    <!-- CHEQUEAR ENLACES -->
     <section id="tab-health" class="tab-panel">
       <div class="toolbar">
         <button id="btn-check-all">chequear todos</button>
-        <button id="btn-check-custom">solo custom-domain</button>
+        <button id="btn-check-custom">solo dominios propios</button>
         <span id="health-status" class="subtle"></span>
       </div>
       <div class="panel">
-        <p class="subtle">el check se hace con <code>fetch(no-cors)</code> + <code>&lt;img&gt;</code> ping. <b>no 100% fiable</b> (CORS bloquea respuestas reales) pero detecta DNS/TLS muertos.</p>
+        <p class="subtle">el test no es 100% fiable (el navegador no puede ver la respuesta por CORS), pero sí detecta dominios completamente caídos (DNS roto, servidor apagado…). no detecta errores 404 de páginas.</p>
         <div id="health-list" class="health-list"></div>
       </div>
     </section>
 
-    <!-- EXPORT -->
+    <!-- PUBLICAR -->
     <section id="tab-export" class="tab-panel">
       <div class="export-tabs">
-        <button class="export-tab-btn active" data-etab="neocities">neocities/index.html</button>
-        <button class="export-tab-btn" data-etab="clouds">clouds/proyectos.json</button>
-        <button class="export-tab-btn" data-etab="archive">archive-data.json</button>
+        <button class="export-tab-btn active" data-etab="neocities">neocities · index.html</button>
+        <button class="export-tab-btn" data-etab="clouds">clouds · proyectos.json</button>
+        <button class="export-tab-btn" data-etab="archive">archive · archive-data.json</button>
       </div>
       <div class="toolbar">
         <button id="btn-regen">regenerar</button>
-        <button id="btn-copy">copiar</button>
+        <button id="btn-copy">copiar al portapapeles</button>
         <button id="btn-download">descargar archivo</button>
         <span id="export-status" class="subtle"></span>
       </div>

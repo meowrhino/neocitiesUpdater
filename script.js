@@ -16,7 +16,6 @@ const DEFAULT_CATEGORIES = [
   'unfinished apps', 'texts', 'misc', 'hidden'
 ];
 
-// map clouds category → archive category
 const ARCHIVE_CAT_MAP = {
   "main quests": "mainQuests",
   "side quests": "sideQuests",
@@ -37,7 +36,7 @@ const GH_API_BASE = 'https://api.github.com/users/meowrhino/repos?per_page=100';
 /* -------------------- state -------------------- */
 
 let state = loadState() || makeEmptyState();
-let ghRepos = [];      // from last fetch
+let ghRepos = [];
 let ghFetchedAt = null;
 let healthCache = loadJSON(LS_HEALTH) || {};
 let rules = loadJSON(LS_RULES) || {
@@ -45,10 +44,12 @@ let rules = loadJSON(LS_RULES) || {
 };
 let currentExportTab = 'neocities';
 let editingId = null;
+let orphanSelection = new Set();
+let catManagerOpen = false;
 
 function makeEmptyState() {
   return {
-    version: 1,
+    version: 2,
     categories: [...DEFAULT_CATEGORIES],
     projects: [],
     nav: defaultNav(),
@@ -57,18 +58,17 @@ function makeEmptyState() {
 }
 
 function defaultNav() {
-  // capturado del index.html actual, editable a mano en el JSON master
   return [
-    { label: 'CV',           url: '/CVs/cast.pdf',   target: '_blank' },
-    { label: 'CV2',          url: '/CVs/eng.pdf',    target: '_blank' },
-    { label: 'portfolio',    url: 'https://www.figma.com/proto/jYLcGbiaKX2eT2hBY5OsXw/portfolio?page-id=0%3A1&type=design&node-id=1-2&viewport=464%2C100%2C0.08&t=wFIYHU81EJvHIpGv-1&scaling=contain&starting-point-node-id=1%3A2', target: '_blank' },
-    { label: 'portfolio_old',url: 'https://meowrhino.cargo.site/portfolio_esp', target: '_blank' },
-    { label: 'about me',     url: 'about.html',      target: '_blank' },
-    { label: 'twitter',      url: 'https://twitter.com/meowrhino', target: '_blank' },
-    { label: 'bsky',         url: 'https://bsky.app/profile/meowrhino.bsky.social', target: '_blank' },
-    { label: 'instagram ',   url: 'https://www.instagram.com/meowrhino/', target: '_blank' },
-    { label: 'email ',       url: 'mailto:manuellatourf@gmail.com',       target: '_blank' },
-    { label: 'paypal',       url: 'https://www.paypal.me/manuellatourf',  target: '_blank' },
+    { label: 'CV',            url: '/CVs/cast.pdf',   target: '_blank' },
+    { label: 'CV2',           url: '/CVs/eng.pdf',    target: '_blank' },
+    { label: 'portfolio',     url: 'https://www.figma.com/proto/jYLcGbiaKX2eT2hBY5OsXw/portfolio?page-id=0%3A1&type=design&node-id=1-2&viewport=464%2C100%2C0.08&t=wFIYHU81EJvHIpGv-1&scaling=contain&starting-point-node-id=1%3A2', target: '_blank' },
+    { label: 'portfolio_old', url: 'https://meowrhino.cargo.site/portfolio_esp', target: '_blank' },
+    { label: 'about me',      url: 'about.html',      target: '_blank' },
+    { label: 'twitter',       url: 'https://twitter.com/meowrhino', target: '_blank' },
+    { label: 'bsky',          url: 'https://bsky.app/profile/meowrhino.bsky.social', target: '_blank' },
+    { label: 'instagram ',    url: 'https://www.instagram.com/meowrhino/', target: '_blank' },
+    { label: 'email ',        url: 'mailto:manuellatourf@gmail.com', target: '_blank' },
+    { label: 'paypal',        url: 'https://www.paypal.me/manuellatourf', target: '_blank' },
   ];
 }
 
@@ -78,6 +78,16 @@ function loadState() {
     if (!raw) return null;
     const s = JSON.parse(raw);
     if (!s || !Array.isArray(s.projects)) return null;
+    // migraciones suaves
+    if (!s.categories) s.categories = [...DEFAULT_CATEGORIES];
+    for (const p of s.projects) {
+      p.links = p.links || [];
+      if (!p.links.some(l => l.primary)) {
+        // marcar como primary el primer link que sea custom-domain (si lo hay) o el primero
+        const primIdx = p.links.findIndex(l => inferLinkType(l.url) === 'custom-domain');
+        if (primIdx >= 0) p.links[primIdx].primary = true;
+      }
+    }
     return s;
   } catch (_) { return null; }
 }
@@ -130,6 +140,7 @@ function toast(msg, ms = 2000) {
   clearTimeout(toast._id);
   toast._id = setTimeout(() => { t.hidden = true; }, ms);
 }
+function truncate(s, n) { return s.length > n ? s.slice(0, n - 1) + '…' : s; }
 
 /* -------------------- type inference -------------------- */
 
@@ -162,11 +173,8 @@ function inferLinkType(url) {
     if (host.includes('tumblr.com')) return 'tumblr';
     if (host.includes('blogspot.com')) return 'blogspot';
     if (host.includes('hotglue.me')) return 'hotglue';
-    if (host === 'localhost') return 'local';
-    return 'custom-domain'; // dominio propio
-  } catch (_) {
-    return 'unknown';
-  }
+    return 'custom-domain';
+  } catch (_) { return 'unknown'; }
 }
 
 function ghRepoFromUrl(url) {
@@ -179,18 +187,16 @@ function ghRepoFromUrl(url) {
 }
 
 function inferProjectType(project) {
-  // prioridad: github-pages > custom-domain > external > local-page > neocities-asset
   const types = project.links.map(l => inferLinkType(l.url));
-  const priority = ['github-pages', 'gitlab-pages', 'custom-domain', 'external', 'neocities-asset', 'local-page'];
+  const priority = ['custom-domain', 'github-pages', 'gitlab-pages', 'external', 'neocities-asset', 'local-page'];
   for (const t of priority) {
     if (types.includes(t)) return t === 'gitlab-pages' ? 'external' : t;
   }
-  // fallback: el primer tipo conocido
   const known = types.find(t => t !== 'unknown' && t !== 'contact');
   return known || 'external';
 }
 
-/* -------------------- HTML parser (neocities index → master) -------------------- */
+/* -------------------- parser -------------------- */
 
 function parseNeocitiesHtml(htmlString) {
   const doc = new DOMParser().parseFromString(htmlString, 'text/html');
@@ -200,27 +206,27 @@ function parseNeocitiesHtml(htmlString) {
   const projects = [];
   const seenIds = new Set();
   let currentCategory = 'uncategorized';
-  let cur = null;  // proyecto acumulando
+  let cur = null;
 
   function flush() {
     if (!cur) return;
     if (!cur.links.length && !cur.name) { cur = null; return; }
-    // id único
-    let base = (cur.id || cur.name || 'p').toLowerCase()
+    let base = (cur.name || 'p').toLowerCase()
       .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
     let id = base || 'p', i = 2;
     while (seenIds.has(id)) id = `${base}-${i++}`;
     seenIds.add(id);
     cur.id = id;
     cur.type = inferProjectType(cur);
-    // derivar ghRepo si corresponde
+    // primary: custom-domain link (si existe) es el principal; si no, el primer link
+    const primIdx = cur.links.findIndex(l => inferLinkType(l.url) === 'custom-domain');
+    if (primIdx >= 0) cur.links[primIdx].primary = true;
     const ghLink = cur.links.find(l => inferLinkType(l.url) === 'github-pages');
     if (ghLink) cur.ghRepo = ghRepoFromUrl(ghLink.url);
     projects.push(cur);
     cur = null;
   }
 
-  // recorrer hijos en orden
   for (const node of container.childNodes) {
     const isComment = node.nodeType === Node.COMMENT_NODE;
     const isElement = node.nodeType === Node.ELEMENT_NODE;
@@ -228,7 +234,6 @@ function parseNeocitiesHtml(htmlString) {
     if (isComment) {
       const text = node.textContent.trim();
       if (text) {
-        // canonicalizar contra DEFAULT_CATEGORIES (case-insensitive)
         const canon = DEFAULT_CATEGORIES.find(c => c.toLowerCase() === text.toLowerCase());
         currentCategory = canon || text;
       }
@@ -258,7 +263,7 @@ function parseNeocitiesHtml(htmlString) {
         showIn: { neocities: true, clouds: currentCategory !== 'hidden', archive: currentCategory !== 'hidden' },
         links: [],
         ghRepo: null,
-        hiddenStyle: isHiddenStyle, // preserva el inline style en export
+        hiddenStyle: isHiddenStyle,
       };
       continue;
     }
@@ -269,6 +274,7 @@ function parseNeocitiesHtml(htmlString) {
       cur.links.push({
         label: (node.textContent || '').trim() || 'link',
         url: href,
+        primary: false,
       });
       continue;
     }
@@ -277,12 +283,9 @@ function parseNeocitiesHtml(htmlString) {
       cur.sup = (cur.sup ? cur.sup + ' ' : '') + (node.textContent || '').trim();
       continue;
     }
-
-    if (tag === 'br') continue;
   }
   flush();
 
-  // status inferido
   for (const p of projects) {
     if (p.links.some(l => /_DEPRECATED\/?$/i.test(l.url)) || /deprecated/i.test(p.name)) p.status = 'deprecated';
     else if (p.links.some(l => /\bWIP\b/i.test(l.label))) p.status = 'wip';
@@ -292,7 +295,7 @@ function parseNeocitiesHtml(htmlString) {
   }
 
   return {
-    version: 1,
+    version: 2,
     categories: [...DEFAULT_CATEGORIES],
     projects,
     nav: defaultNav(),
@@ -301,6 +304,15 @@ function parseNeocitiesHtml(htmlString) {
 }
 
 /* -------------------- exporters -------------------- */
+
+function sortedLinks(p) {
+  // el link primary va primero. resto conserva orden.
+  const out = [];
+  const primary = p.links.find(l => l.primary);
+  if (primary) out.push(primary);
+  for (const l of p.links) if (!l.primary) out.push(l);
+  return out;
+}
 
 function exportNeocitiesHtml() {
   const byCat = {};
@@ -369,7 +381,7 @@ function projectToNeocitiesLine(p) {
     : (p.highlight ? ' style="color: #FFD66B;"' : '');
   const supHtml = p.sup ? `<sup>${escapeHtml(p.sup)}</sup>` : '';
   const linkStylePrefix = p.hiddenStyle ? ' style="color:black; cursor: default;"' : '';
-  const linksHtml = p.links.map(l =>
+  const linksHtml = sortedLinks(p).map(l =>
     `      <a${linkStylePrefix} href="${escapeHtml(l.url)}" target="_blank">${escapeHtml(l.label || 'link')}</a>`
   ).join('\n');
   return `      <ainfo${ainfoStyle}>${escapeHtml(p.name)}</ainfo>${supHtml}\n${linksHtml} <br>`;
@@ -383,7 +395,7 @@ function exportCloudsJson() {
     if (!items.length) continue;
     out[cat] = items.map(p => ({
       name: p.name,
-      links: p.links.map(l => l.url),
+      links: sortedLinks(p).map(l => l.url),
     }));
   }
   return JSON.stringify(out, null, 2);
@@ -391,41 +403,28 @@ function exportCloudsJson() {
 
 function exportArchiveJson() {
   const out = {
-    welcome: {
-      titulo: 'meowrhino archive',
-      studioUrl: 'index.html',
-    }
+    welcome: { titulo: 'meowrhino archive', studioUrl: 'index.html' }
   };
   for (const cat of state.categories) {
     const key = ARCHIVE_CAT_MAP[cat] || cat.replace(/\s+/g, '');
     const items = state.projects
       .filter(p => p.category === cat && p.showIn?.archive !== false && !p.hidden);
     if (!items.length) continue;
+    const links = sortedLinks;
     out[key] = items.map(p => {
-      if (p.links.length === 1) {
-        return { nombre: p.name, url: p.links[0].url };
-      }
-      return {
-        nombre: p.name,
-        links: p.links.map(l => ({ label: l.label || 'link', url: l.url }))
-      };
+      const ls = sortedLinks(p);
+      if (ls.length === 1) return { nombre: p.name, url: ls[0].url };
+      return { nombre: p.name, links: ls.map(l => ({ label: l.label || 'link', url: l.url })) };
     });
   }
   return JSON.stringify(out, null, 2);
 }
 
-/* -------------------- UI: tabs -------------------- */
+/* -------------------- tabs -------------------- */
 
 function setupTabs() {
   for (const btn of $$('.tab-btn')) {
-    btn.addEventListener('click', () => {
-      $$('.tab-btn').forEach(b => b.classList.toggle('active', b === btn));
-      $$('.tab-panel').forEach(p => p.classList.toggle('active', p.id === `tab-${btn.dataset.tab}`));
-      if (btn.dataset.tab === 'projects') renderProjects();
-      if (btn.dataset.tab === 'auditor') renderAuditor();
-      if (btn.dataset.tab === 'health') renderHealth();
-      if (btn.dataset.tab === 'export') regenExport();
-    });
+    btn.addEventListener('click', () => goTab(btn.dataset.tab));
   }
   for (const btn of $$('.export-tab-btn')) {
     btn.addEventListener('click', () => {
@@ -435,12 +434,20 @@ function setupTabs() {
     });
   }
 }
+function goTab(name) {
+  $$('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+  $$('.tab-panel').forEach(p => p.classList.toggle('active', p.id === `tab-${name}`));
+  if (name === 'projects') renderProjects();
+  if (name === 'auditor') renderAuditor();
+  if (name === 'health') renderHealth();
+  if (name === 'export') regenExport();
+}
 
-/* -------------------- UI: dashboard -------------------- */
+/* -------------------- dashboard -------------------- */
 
 function updateStatusLine() {
   const total = state.projects.length;
-  const last = state.meta?.lastGhFetch ? ` · gh: ${new Date(state.meta.lastGhFetch).toLocaleString()}` : '';
+  const last = state.meta?.lastGhFetch ? ` · github: ${new Date(state.meta.lastGhFetch).toLocaleString()}` : '';
   $('#status-line').textContent = `${total} proyectos${last}`;
 }
 
@@ -452,18 +459,14 @@ function updateDashboard() {
   $('#stat-external').textContent = projs.filter(p => p.type === 'external').length;
   $('#stat-hidden').textContent = projs.filter(p => p.hidden || p.category === 'hidden').length;
 
-  // orphans/dead need GH data
   if (ghRepos.length) {
-    const orphans = computeOrphans();
-    $('#stat-orphans').textContent = orphans.length;
-    const dead = computeDeadRepos();
-    $('#stat-dead').textContent = dead.length;
+    $('#stat-orphans').textContent = computeOrphans().length;
+    $('#stat-dead').textContent = computeDeadRepos().length;
   } else {
     $('#stat-orphans').textContent = '—';
     $('#stat-dead').textContent = '—';
   }
 
-  // categorías
   const cats = $('#cat-overview');
   cats.innerHTML = '';
   for (const cat of state.categories) {
@@ -474,29 +477,24 @@ function updateDashboard() {
     ));
   }
 
-  // filtro de categorías en projects
   const sel = $('#proj-filter-cat');
   if (sel) {
     const current = sel.value;
     sel.innerHTML = '<option value="">todas las categorías</option>';
-    for (const cat of state.categories) {
-      sel.appendChild(el('option', { value: cat }, cat));
-    }
+    for (const cat of state.categories) sel.appendChild(el('option', { value: cat }, cat));
     sel.value = current;
   }
 
-  // seed prompt
   $('#seed-prompt').hidden = projs.length > 0;
 }
 
-/* -------------------- UI: projects tab -------------------- */
+/* -------------------- proyectos: render -------------------- */
 
 function renderProjects() {
   const q = $('#proj-search').value.toLowerCase().trim();
   const fcat = $('#proj-filter-cat').value;
   const ftype = $('#proj-filter-type').value;
   const fstatus = $('#proj-filter-status').value;
-  const showHidden = $('#proj-filter-hidden').checked;
 
   const root = $('#projects-list');
   root.innerHTML = '';
@@ -510,7 +508,6 @@ function renderProjects() {
   }
 
   const passes = (p) => {
-    if (!showHidden && (p.hidden || p.category === 'hidden')) return false;
     if (fcat && p.category !== fcat) return false;
     if (ftype && p.type !== ftype) return false;
     if (fstatus && p.status !== fstatus) return false;
@@ -528,8 +525,12 @@ function renderProjects() {
 
     const group = el('div', { class: 'cat-group', dataset: { category: cat } });
     const header = el('div', { class: 'cat-group-header' },
-      el('b', {}, cat),
-      el('span', {}, `${items.length} / ${(byCat[cat] || []).length}`)
+      el('b', {}, '// ' + cat),
+      el('span', {}, `${items.length} / ${(byCat[cat] || []).length}`),
+      el('div', { class: 'cat-reorder' },
+        el('button', { title: 'mover categoría arriba', onclick: () => moveCategory(cat, -1) }, '↑'),
+        el('button', { title: 'mover categoría abajo', onclick: () => moveCategory(cat, +1) }, '↓'),
+      )
     );
     group.appendChild(header);
 
@@ -538,7 +539,7 @@ function renderProjects() {
   }
 
   if (!root.children.length) {
-    root.appendChild(el('div', { class: 'panel' }, el('p', { class: 'subtle' }, 'sin resultados con estos filtros.')));
+    root.appendChild(el('div', { style: 'color: rgba(255,255,255,0.5); padding: 20px; text-align: center;' }, 'sin resultados con estos filtros.'));
   }
 }
 
@@ -552,27 +553,34 @@ function renderProjectRow(p) {
   });
 
   row.appendChild(el('span', { class: 'drag-handle', title: 'arrastrar para reordenar' }, '⋮⋮'));
-  row.appendChild(el('div', {},
-    el('div', { class: 'p-name' + (p.highlight ? ' highlight' : '') }, p.name),
-    el('div', { class: 'p-slug' }, p.id + (p.ghRepo ? ` · gh:${p.ghRepo}` : ''))
-  ));
-  row.appendChild(el('div', { class: 'p-cat' }, p.category));
-  row.appendChild(el('div', { class: 'p-type' }, p.type));
-  row.appendChild(el('div', { class: 'p-status' }, p.status));
 
-  const links = el('div', { class: 'p-links' });
-  for (const l of p.links) {
-    const cls = 'p-link' + (healthCache[l.url] === 'ok' ? ' ok' : (healthCache[l.url] === 'err' ? ' broken' : ''));
-    links.appendChild(el('a', { class: cls, href: l.url, target: '_blank', rel: 'noopener' },
-      el('span', { class: 'lbl' }, `[${l.label}]`), truncate(l.url, 50)
+  // name block (ainfo-style)
+  const nameBlock = el('div', { class: 'p-name-block' });
+  const primary = p.links.find(l => l.primary);
+  const nameEl = primary
+    ? el('a', { class: 'p-name' + (p.highlight ? ' highlight' : ''), href: primary.url, target: '_blank', rel: 'noopener' }, p.name)
+    : el('span', { class: 'p-name' + (p.highlight ? ' highlight' : '') }, p.name);
+  nameBlock.appendChild(nameEl);
+  if (p.sup) nameBlock.appendChild(el('span', { class: 'p-name-sup' }, p.sup));
+  nameBlock.appendChild(el('div', { class: 'p-meta' }, `${p.type} · ${p.status}${p.client ? ' · ' + p.client : ''}`));
+  row.appendChild(nameBlock);
+
+  // links (neocities-style: [label] text)
+  const linksBox = el('div', { class: 'p-links' });
+  for (const l of sortedLinks(p)) {
+    const cls = 'p-link'
+      + (l.primary ? ' primary' : '')
+      + (healthCache[l.url] === 'ok' ? ' ok' : (healthCache[l.url] === 'err' ? ' broken' : ''));
+    linksBox.appendChild(el('a', { class: cls, href: l.url, target: '_blank', rel: 'noopener' },
+      el('span', { class: 'lbl' }, `[${l.label}]`), ' ', truncate(l.url.replace(/^https?:\/\//, ''), 38)
     ));
   }
-  row.appendChild(links);
+  row.appendChild(linksBox);
 
   row.appendChild(el('div', { class: 'p-actions' },
-    el('button', { onclick: () => { editingId = p.id; renderProjects(); } }, 'edit'),
-    el('button', { onclick: () => toggleHidden(p.id) }, (p.hidden ? 'unhide' : 'hide')),
-    el('button', { onclick: () => deleteProject(p.id) }, 'del')
+    el('button', { onclick: () => { editingId = p.id; renderProjects(); } }, 'editar'),
+    el('button', { onclick: () => toggleHidden(p.id) }, (p.hidden ? 'mostrar' : 'esconder')),
+    el('button', { onclick: () => deleteProject(p.id) }, 'borrar')
   ));
 
   wireDragRow(row);
@@ -582,7 +590,7 @@ function renderProjectRow(p) {
 function renderProjectEdit(p) {
   const box = el('div', { class: 'project-edit', dataset: { id: p.id } });
 
-  const input = (label, val, kind = 'text', opts = null) => {
+  const makeInput = (label, val, kind = 'text', opts = null) => {
     let input;
     if (kind === 'select') {
       input = el('select', {}, ...opts.map(o => el('option', { value: o, selected: val === o }, o)));
@@ -591,20 +599,19 @@ function renderProjectEdit(p) {
     } else {
       input = el('input', { type: 'text', value: val || '' });
     }
-    const lbl = el('label', {}, el('span', {}, label), input);
-    return { lbl, input };
+    return { lbl: el('label', {}, el('span', {}, label), input), input };
   };
 
   const f = {};
-  f.name    = input('name', p.name);
-  f.id      = input('id / slug', p.id);
-  f.category= input('category', p.category, 'select', state.categories);
-  f.type    = input('type', p.type, 'select', ['github-pages','custom-domain','external','neocities-asset','local-page']);
-  f.status  = input('status', p.status, 'select', ['live','wip','alpha','beta','deprecated']);
-  f.client  = input('client', p.client);
-  f.ghRepo  = input('ghRepo', p.ghRepo || '');
-  f.sup     = input('sup (nota pequeña)', p.sup || '');
-  f.notes   = input('notas', p.notes || '', 'textarea');
+  f.name     = makeInput('nombre', p.name);
+  f.id       = makeInput('slug (id)', p.id);
+  f.category = makeInput('categoría', p.category, 'select', state.categories);
+  f.type     = makeInput('tipo', p.type, 'select', ['github-pages','custom-domain','external','neocities-asset','local-page']);
+  f.status   = makeInput('estado', p.status, 'select', ['live','wip','alpha','beta','deprecated']);
+  f.client   = makeInput('cliente', p.client);
+  f.ghRepo   = makeInput('repo de github', p.ghRepo || '');
+  f.sup      = makeInput('nota pequeña (sup)', p.sup || '');
+  f.notes    = makeInput('notas', p.notes || '', 'textarea');
 
   for (const k of ['name','id','category','type','status','client','ghRepo','sup']) box.appendChild(f[k].lbl);
   f.notes.lbl.classList.add('full'); box.appendChild(f.notes.lbl);
@@ -615,34 +622,45 @@ function renderProjectEdit(p) {
     if (checked) inp.checked = true;
     return { lbl: el('label', { class: 'chk' }, inp, el('span', {}, label)), input: inp };
   };
-  f.highlight = chkbox('highlight (amarillo)', p.highlight);
-  f.hidden    = chkbox('hidden (ocultar del tool + outputs)', p.hidden);
-  f.siNeo     = chkbox('incluir en neocities', p.showIn?.neocities !== false);
-  f.siCloud   = chkbox('incluir en clouds', p.showIn?.clouds !== false);
-  f.siArch    = chkbox('incluir en archive', p.showIn?.archive !== false);
-  const flagsBox = el('div', { class: 'full row' }, f.highlight.lbl, f.hidden.lbl, f.siNeo.lbl, f.siCloud.lbl, f.siArch.lbl);
-  box.appendChild(flagsBox);
+  f.highlight = chkbox('destacar (amarillo)', p.highlight);
+  f.hidden    = chkbox('esconder de listas', p.hidden);
+  f.siNeo     = chkbox('publicar en neocities', p.showIn?.neocities !== false);
+  f.siCloud   = chkbox('publicar en clouds', p.showIn?.clouds !== false);
+  f.siArch    = chkbox('publicar en archive', p.showIn?.archive !== false);
+  box.appendChild(el('div', { class: 'full row' }, f.highlight.lbl, f.hidden.lbl, f.siNeo.lbl, f.siCloud.lbl, f.siArch.lbl));
 
   // links editor
   const linksBox = el('div', { class: 'full links-editor' });
-  linksBox.appendChild(el('b', {}, 'links'));
+  linksBox.appendChild(el('b', {}, 'enlaces (★ = principal · si el principal cae, se muestra el siguiente)'));
   const links = p.links.map(l => ({ ...l }));
+  function setPrimary(i) {
+    for (let j = 0; j < links.length; j++) links[j].primary = (j === i);
+    syncLinks(); redrawLinks();
+  }
   function redrawLinks() {
     $$('.link-row', linksBox).forEach(n => n.remove());
     links.forEach((l, i) => {
-      const labelInp = el('input', { type: 'text', value: l.label || '' });
-      const urlInp = el('input', { type: 'text', value: l.url || '' });
+      const star = el('span', { class: 'primary-chk' + (l.primary ? ' active' : ''), title: 'marcar como principal', onclick: () => setPrimary(i) }, l.primary ? '★' : '☆');
+      const labelInp = el('input', { type: 'text', value: l.label || '', placeholder: 'etiqueta' });
+      const urlInp = el('input', { type: 'text', value: l.url || '', placeholder: 'url' });
       const up = el('button', { onclick: () => { if (i > 0) { [links[i-1], links[i]] = [links[i], links[i-1]]; syncLinks(); redrawLinks(); } } }, '↑');
       const dn = el('button', { onclick: () => { if (i < links.length - 1) { [links[i+1], links[i]] = [links[i], links[i+1]]; syncLinks(); redrawLinks(); } } }, '↓');
       const del = el('button', { onclick: () => { links.splice(i, 1); syncLinks(); redrawLinks(); } }, '×');
       labelInp.addEventListener('input', () => { l.label = labelInp.value; syncLinks(); });
       urlInp.addEventListener('input', () => { l.url = urlInp.value; syncLinks(); });
-      linksBox.appendChild(el('div', { class: 'link-row' }, labelInp, urlInp, el('div', { class: 'row' }, up, dn, del)));
+      const row = el('div', { class: 'link-row' });
+      row.appendChild(el('div', {}, labelInp));
+      row.appendChild(el('div', {}, urlInp));
+      row.appendChild(star);
+      row.appendChild(el('div', { class: 'row', style: 'grid-column: span 2' }, up, dn, del));
+      // ajustamos las columnas para que queden label | url | star | botones
+      row.style.gridTemplateColumns = '100px 1fr 24px auto';
+      linksBox.appendChild(row);
     });
   }
   function syncLinks() { p.links = links.slice(); }
   redrawLinks();
-  const addLink = el('button', { onclick: () => { links.push({ label: 'link', url: '' }); syncLinks(); redrawLinks(); } }, '+ add link');
+  const addLink = el('button', { onclick: () => { links.push({ label: 'link', url: '', primary: false }); syncLinks(); redrawLinks(); } }, '+ añadir enlace');
   linksBox.appendChild(addLink);
   box.appendChild(linksBox);
 
@@ -666,6 +684,7 @@ function renderProjectEdit(p) {
       archive: f.siArch.input.checked,
     };
     p.links = links.filter(l => l.url.trim());
+    if (!p.links.some(l => l.primary) && p.links.length) p.links[0].primary = true;
     editingId = null;
     saveState();
     renderProjects();
@@ -678,8 +697,6 @@ function renderProjectEdit(p) {
   ));
   return box;
 }
-
-function truncate(s, n) { return s.length > n ? s.slice(0, n - 1) + '…' : s; }
 
 function toggleHidden(id) {
   const p = state.projects.find(x => x.id === id);
@@ -710,13 +727,99 @@ function newProject() {
     notes: '',
     sup: '',
     showIn: { neocities: true, clouds: true, archive: true },
-    links: [{ label: 'link', url: '' }],
+    links: [{ label: 'link', url: '', primary: true }],
     ghRepo: null,
     hiddenStyle: false,
   };
   state.projects.unshift(p);
   editingId = p.id;
   saveState();
+  renderProjects();
+  // scroll to top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* -------------------- categorías CRUD -------------------- */
+
+function toggleCatManager() {
+  catManagerOpen = !catManagerOpen;
+  renderCatManager();
+}
+
+function renderCatManager() {
+  const root = $('#cat-manager');
+  root.hidden = !catManagerOpen;
+  if (!catManagerOpen) return;
+  root.innerHTML = '';
+  root.appendChild(el('h2', {}, 'gestionar categorías'));
+  root.appendChild(el('p', { class: 'subtle' }, 'puedes renombrar, reordenar, añadir o borrar categorías. si borras una que tiene proyectos, te pedirá confirmar y moverá los proyectos a "misc".'));
+
+  state.categories.forEach((cat, i) => {
+    const count = state.projects.filter(p => p.category === cat).length;
+    const input = el('input', { type: 'text', value: cat });
+    const row = el('div', { class: 'cat-row' },
+      el('span', {}, `${i + 1}.`),
+      input,
+      el('span', { class: 'subtle' }, `${count} proyectos`),
+      el('button', { onclick: () => moveCategory(cat, -1) }, '↑'),
+      el('button', { onclick: () => moveCategory(cat, +1) }, '↓'),
+      el('button', { onclick: () => {
+        const newName = input.value.trim();
+        if (!newName || newName === cat) return;
+        if (state.categories.includes(newName)) { alert('ya existe esa categoría'); return; }
+        renameCategory(cat, newName);
+      } }, 'renombrar'),
+    );
+    row.appendChild(el('button', { onclick: () => deleteCategory(cat) }, 'borrar'));
+    root.appendChild(row);
+  });
+
+  // añadir
+  const newInp = el('input', { type: 'text', placeholder: 'nombre de la nueva categoría' });
+  const addBtn = el('button', { onclick: () => {
+    const name = newInp.value.trim();
+    if (!name) return;
+    if (state.categories.includes(name)) { alert('ya existe'); return; }
+    state.categories.push(name);
+    saveState();
+    renderCatManager();
+    renderProjects();
+  } }, '+ añadir categoría');
+  root.appendChild(el('div', { class: 'row' }, newInp, addBtn));
+}
+
+function moveCategory(cat, delta) {
+  const i = state.categories.indexOf(cat);
+  if (i < 0) return;
+  const j = i + delta;
+  if (j < 0 || j >= state.categories.length) return;
+  [state.categories[i], state.categories[j]] = [state.categories[j], state.categories[i]];
+  saveState();
+  renderProjects();
+  if (catManagerOpen) renderCatManager();
+}
+
+function renameCategory(oldName, newName) {
+  const i = state.categories.indexOf(oldName);
+  if (i < 0) return;
+  state.categories[i] = newName;
+  for (const p of state.projects) if (p.category === oldName) p.category = newName;
+  saveState();
+  renderCatManager();
+  renderProjects();
+}
+
+function deleteCategory(cat) {
+  const count = state.projects.filter(p => p.category === cat).length;
+  const msg = count > 0
+    ? `hay ${count} proyectos en "${cat}". se moverán a "misc". ¿continuar?`
+    : `borrar "${cat}"?`;
+  if (!confirm(msg)) return;
+  for (const p of state.projects) if (p.category === cat) p.category = 'misc';
+  state.categories = state.categories.filter(c => c !== cat);
+  if (!state.categories.includes('misc')) state.categories.push('misc');
+  saveState();
+  renderCatManager();
   renderProjects();
 }
 
@@ -761,8 +864,8 @@ function reorderProject(fromId, toId, before) {
   const to = state.projects.findIndex(p => p.id === toId);
   if (from < 0 || to < 0) return;
   const moved = state.projects.splice(from, 1)[0];
-  // si cambia categoría, adoptar la del destino
-  moved.category = state.projects[to > from ? to - 1 : to].category;
+  const target = state.projects[to > from ? to - 1 : to];
+  if (target) moved.category = target.category;
   let newIdx = state.projects.findIndex(p => p.id === toId);
   if (!before) newIdx += 1;
   state.projects.splice(newIdx, 0, moved);
@@ -770,11 +873,11 @@ function reorderProject(fromId, toId, before) {
   renderProjects();
 }
 
-/* -------------------- auditor (GH fetch + diff) -------------------- */
+/* -------------------- auditor -------------------- */
 
 async function fetchGh() {
   const statusEl = $('#gh-status');
-  statusEl.textContent = 'fetching…';
+  statusEl.textContent = 'cargando…';
   try {
     const page1 = await fetch(GH_API_BASE + '&page=1').then(r => r.json());
     let all = page1;
@@ -790,7 +893,7 @@ async function fetchGh() {
     renderAuditor();
     updateDashboard();
   } catch (e) {
-    statusEl.textContent = 'error fetcheando: ' + e.message;
+    statusEl.textContent = 'error: ' + e.message;
   }
 }
 
@@ -831,7 +934,6 @@ function computeDeadRepos() {
 }
 
 function renderAuditor() {
-  // hydrate rules inputs
   $('#rule-forks').checked = rules.forks;
   $('#rule-archived').checked = rules.archived;
   $('#rule-deprecated').checked = rules.deprecated;
@@ -840,51 +942,70 @@ function renderAuditor() {
 
   const orphansEl = $('#orphans-list');
   orphansEl.innerHTML = '';
+  $('#deadrepos-list').innerHTML = '';
+
   if (!ghRepos.length) {
-    orphansEl.appendChild(el('p', { class: 'subtle' }, 'pulsa "fetch github repos" para empezar.'));
-    $('#deadrepos-list').innerHTML = '';
+    orphansEl.appendChild(el('p', {}, 'pulsa "traer repos de github" para empezar.'));
+    $('#orphan-count').textContent = '0';
+    $('#dead-count').textContent = '0';
+    $('#orphan-batch-bar').hidden = true;
     return;
   }
+
   const orphans = computeOrphans();
+  $('#orphan-count').textContent = orphans.length;
   if (!orphans.length) {
-    orphansEl.appendChild(el('p', { class: 'subtle' }, '🎉 todos los repos están listados.'));
+    orphansEl.appendChild(el('p', {}, '🎉 todos los repos están listados.'));
   }
+
+  renderOrphanBatchBar(orphans);
+
   for (const repo of orphans) {
+    const selected = orphanSelection.has(repo.name);
+    const chk = el('input', { type: 'checkbox' });
+    if (selected) chk.checked = true;
+    chk.addEventListener('change', () => {
+      if (chk.checked) orphanSelection.add(repo.name);
+      else orphanSelection.delete(repo.name);
+      renderOrphanBatchBar(orphans);
+    });
+
     const row = el('div', { class: 'orphan-row' });
+    row.appendChild(chk);
     row.appendChild(el('div', {},
       el('div', { class: 'repo-name' }, repo.name),
       el('div', { class: 'meta' },
         (repo.fork ? 'fork · ' : '') +
-        (repo.archived ? 'archived · ' : '') +
+        (repo.archived ? 'archivado · ' : '') +
         (repo.language || '—') + ' · ★' + (repo.stargazers_count || 0)
       )
     ));
     row.appendChild(el('div', {},
-      el('a', { href: repo.html_url, target: '_blank', class: 'p-link' }, repo.html_url),
+      el('a', { href: repo.html_url, target: '_blank' }, repo.html_url),
       el('div', { class: 'meta' }, repo.description || '')
     ));
-    const catSel = el('select', {},
-      ...state.categories.map(c => el('option', { value: c }, c)));
+    const catSel = el('select', {}, ...state.categories.map(c => el('option', { value: c }, c)));
     catSel.value = guessCategoryForRepo(repo);
     row.appendChild(catSel);
     row.appendChild(el('div', { class: 'row' },
-      el('button', { onclick: () => { addProjectFromRepo(repo, catSel.value); row.remove(); } }, '+ añadir'),
-      el('button', { onclick: () => addWhitelist(repo.name) }, 'ignorar')
+      el('button', { onclick: () => { addProjectFromRepo(repo, catSel.value); orphanSelection.delete(repo.name); renderAuditor(); } }, '+ añadir'),
+      el('button', { onclick: () => { addWhitelist(repo.name); orphanSelection.delete(repo.name); } }, 'ignorar')
     ));
     orphansEl.appendChild(row);
   }
 
-  const deadEl = $('#deadrepos-list');
-  deadEl.innerHTML = '';
   const dead = computeDeadRepos();
-  if (!dead.length) deadEl.appendChild(el('p', { class: 'subtle' }, 'ningún link apunta a un repo gh muerto.'));
+  $('#dead-count').textContent = dead.length;
+  const deadEl = $('#deadrepos-list');
+  if (!dead.length) deadEl.appendChild(el('p', {}, 'ningún enlace apunta a un repo que ya no existe.'));
   for (const d of dead) {
     const row = el('div', { class: 'orphan-row' });
+    row.appendChild(el('div', {}));
     row.appendChild(el('div', {},
       el('div', { class: 'repo-name' }, d.project.name),
-      el('div', { class: 'meta' }, `cat: ${d.project.category} · slug: ${d.project.id}`)
+      el('div', { class: 'meta' }, `${d.project.category} · slug: ${d.project.id}`)
     ));
-    row.appendChild(el('div', {}, d.url));
+    row.appendChild(el('div', { class: 'meta' }, d.url));
     row.appendChild(el('div', { class: 'meta' }, 'repo: ' + d.repo));
     row.appendChild(el('div', { class: 'row' },
       el('button', { onclick: () => { editingId = d.project.id; goTab('projects'); } }, 'editar')
@@ -893,14 +1014,104 @@ function renderAuditor() {
   }
 }
 
+function renderOrphanBatchBar(orphans) {
+  const bar = $('#orphan-batch-bar');
+  const n = orphanSelection.size;
+  bar.hidden = n === 0;
+  if (!n) return;
+  $('#orphan-selected-count').textContent = `${n} seleccionado${n !== 1 ? 's' : ''}`;
+
+  // target project dropdown
+  const target = $('#orphan-batch-target');
+  const cur = target.value || '__new__';
+  target.innerHTML = '<option value="__new__">crear proyecto nuevo</option>';
+  const sorted = [...state.projects].sort((a, b) => a.name.localeCompare(b.name));
+  for (const p of sorted) {
+    target.appendChild(el('option', { value: p.id }, `→ añadir enlaces a: ${p.name} (${p.category})`));
+  }
+  target.value = sorted.find(p => p.id === cur) ? cur : '__new__';
+
+  const catSel = $('#orphan-batch-cat');
+  catSel.innerHTML = '';
+  for (const c of state.categories) catSel.appendChild(el('option', { value: c }, c));
+  const guessed = guessCategoryForRepo({ name: [...orphanSelection][0] || '' });
+  catSel.value = guessed;
+
+  const nameInp = $('#orphan-batch-name');
+  if (!nameInp.value) nameInp.value = [...orphanSelection][0] || '';
+}
+
+function applyOrphanBatch() {
+  if (!orphanSelection.size) return;
+  const target = $('#orphan-batch-target').value;
+  const reposSelected = [...orphanSelection].map(n => ghRepos.find(r => r.name === n)).filter(Boolean);
+
+  if (target === '__new__') {
+    const name = $('#orphan-batch-name').value.trim() || reposSelected[0].name;
+    const cat = $('#orphan-batch-cat').value;
+    const links = reposSelected.map((r, i) => ({
+      label: reposSelected.length > 1 ? `v${reposSelected.length - i}` : 'link',
+      url: `https://meowrhino.github.io/${r.name}/`,
+      primary: i === 0,
+    }));
+    const p = {
+      id: uid(name),
+      name,
+      highlight: false,
+      category: cat,
+      type: 'github-pages',
+      subtype: '',
+      status: 'live',
+      client: '',
+      hidden: false,
+      notes: reposSelected.map(r => `${r.name}: ${r.description || ''}`).filter(Boolean).join('\n'),
+      sup: '',
+      showIn: { neocities: true, clouds: true, archive: true },
+      links,
+      ghRepo: reposSelected[0].name,
+      hiddenStyle: false,
+    };
+    state.projects.push(p);
+    toast(`creado "${name}" con ${reposSelected.length} enlaces`);
+  } else {
+    const p = state.projects.find(x => x.id === target);
+    if (!p) return;
+    for (const r of reposSelected) {
+      // label: v1, v2, v3 automáticamente si hay más de uno
+      const versionLabel = /^v\d+$/i.test(r.name.replace(p.name, '').replace(/[^\w]/g, ''))
+        ? r.name.replace(p.name, '').replace(/[^\w]/g, '').toLowerCase()
+        : r.name;
+      p.links.push({ label: versionLabel || 'link', url: `https://meowrhino.github.io/${r.name}/`, primary: false });
+    }
+    toast(`añadidos ${reposSelected.length} enlaces a "${p.name}"`);
+  }
+
+  orphanSelection.clear();
+  saveState();
+  renderAuditor();
+}
+
+function ignoreOrphanBatch() {
+  const names = [...orphanSelection];
+  const wl = (rules.whitelist || '').split(',').map(s => s.trim()).filter(Boolean);
+  for (const n of names) if (!wl.includes(n)) wl.push(n);
+  rules.whitelist = wl.join(', ');
+  saveJSON(LS_RULES, rules);
+  $('#rule-whitelist').value = rules.whitelist;
+  orphanSelection.clear();
+  renderAuditor();
+  toast(`ignorados ${names.length}`);
+}
+
 function guessCategoryForRepo(repo) {
-  const n = repo.name.toLowerCase();
+  const n = (repo.name || '').toLowerCase();
+  if (!n) return state.categories[0] || 'misc';
   if (/_deprecated$/i.test(n)) return 'unfinished apps';
   if (/^notas/.test(n) || n === 'hopeko' || n === 'hopeko2' || n === 'somnis' || n === 'historias') return 'texts';
   if (/(chat|piuler|messagepark)/.test(n)) return 'social apps';
   if (/(cards|minesweeper|rockpaper|lettersoup|horselife|gameoflife|5cards)/.test(n)) return 'games';
   if (/(calc|generator|convert|converter|img|video|fcyp|checker|setup|trackr|navicon|tarifa|etymodict|writingapp|faqautonomos|encuesta|colorfun)/.test(n)) return 'tools';
-  if (/test|_deprecated|safeamorx|plantitas|latrini|linktree|tinnitus|ableme|oca|tem|directorio|registro|quests|receptes|taxrhino|txttohtml|paintonline|pdfs|grid-web|xordxs|tarifas/.test(n)) return 'unfinished apps';
+  if (/test|safeamorx|plantitas|latrini|linktree|tinnitus|ableme|oca|tem|directorio|registro|quests|receptes|taxrhino|txttohtml|paintonline|pdfs|grid-web|xordxs|tarifas/.test(n)) return 'unfinished apps';
   return 'experiments';
 }
 
@@ -918,7 +1129,7 @@ function addProjectFromRepo(repo, category) {
     notes: repo.description || '',
     sup: '',
     showIn: { neocities: true, clouds: true, archive: true },
-    links: [{ label: 'link', url: `https://meowrhino.github.io/${repo.name}/` }],
+    links: [{ label: 'link', url: `https://meowrhino.github.io/${repo.name}/`, primary: true }],
     ghRepo: repo.name,
     hiddenStyle: false,
   };
@@ -955,23 +1166,14 @@ function wireAuditorRules() {
   });
 }
 
-function goTab(name) {
-  $$('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
-  $$('.tab-panel').forEach(p => p.classList.toggle('active', p.id === `tab-${name}`));
-  if (name === 'projects') renderProjects();
-  if (name === 'auditor') renderAuditor();
-  if (name === 'health') renderHealth();
-  if (name === 'export') regenExport();
-}
-
-/* -------------------- health check -------------------- */
+/* -------------------- health -------------------- */
 
 function renderHealth() {
   const root = $('#health-list');
   root.innerHTML = '';
   const urls = collectUrls();
   for (const u of urls) {
-    const status = healthCache[u] || 'unknown';
+    const status = healthCache[u.url] || 'unknown';
     root.appendChild(el('div', { class: 'health-row ' + status },
       el('span', { class: 'dot' }),
       el('span', {}, u.project),
@@ -994,13 +1196,10 @@ function collectUrls(onlyCustom = false) {
 }
 
 async function pingUrl(url) {
-  // CORS-safe ping: no-cors fetch returns opaque; error = real network failure
   try {
     await fetch(url, { method: 'GET', mode: 'no-cors', cache: 'no-store' });
     return 'ok';
-  } catch (_) {
-    return 'err';
-  }
+  } catch (_) { return 'err'; }
 }
 
 async function checkAll(onlyCustom = false) {
@@ -1015,10 +1214,10 @@ async function checkAll(onlyCustom = false) {
     saveJSON(LS_HEALTH, healthCache);
     renderHealth();
   }
-  statusEl.textContent = `listo · ${urls.length} checks`;
+  statusEl.textContent = `listo · ${urls.length} chequeos`;
 }
 
-/* -------------------- export tab -------------------- */
+/* -------------------- export -------------------- */
 
 function regenExport() {
   let out = '';
@@ -1031,26 +1230,24 @@ function regenExport() {
 async function copyExport() {
   try {
     await navigator.clipboard.writeText($('#export-output').textContent);
-    toast('copiado al portapapeles');
-  } catch (_) {
-    toast('no se pudo copiar · selecciona y copia manual');
-  }
+    toast('copiado');
+  } catch (_) { toast('no se pudo copiar · selecciona y copia manual'); }
 }
 
 function downloadExport() {
   const content = $('#export-output').textContent;
-  const ext = currentExportTab === 'neocities' ? 'html' : 'json';
   const name = currentExportTab === 'neocities' ? 'index.html'
     : currentExportTab === 'clouds' ? 'proyectos.json'
     : 'archive-data.json';
-  const blob = new Blob([content], { type: ext === 'html' ? 'text/html' : 'application/json' });
+  const type = currentExportTab === 'neocities' ? 'text/html' : 'application/json';
+  const blob = new Blob([content], { type });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = name;
   a.click();
 }
 
-/* -------------------- import/export master JSON -------------------- */
+/* -------------------- master JSON import/export -------------------- */
 
 function exportMasterJson() {
   const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
@@ -1060,9 +1257,7 @@ function exportMasterJson() {
   a.click();
 }
 
-function triggerImport() {
-  $('#file-input').click();
-}
+function triggerImport() { $('#file-input').click(); }
 
 function handleImportFile(file) {
   const reader = new FileReader();
@@ -1074,7 +1269,7 @@ function handleImportFile(file) {
       saveState();
       updateDashboard();
       renderProjects();
-      toast('master JSON importado');
+      toast('datos importados');
     } catch (err) { alert('error: ' + err.message); }
   };
   reader.readAsText(file);
@@ -1093,7 +1288,6 @@ function toggleTheme() {
 /* -------------------- seed -------------------- */
 
 async function tryFetchSeed() {
-  // 1) si hay un master JSON previamente guardado en data/seed.json, úsalo
   try {
     const r = await fetch('data/seed.json', { cache: 'no-store' });
     if (r.ok) {
@@ -1103,13 +1297,11 @@ async function tryFetchSeed() {
         saveState();
         updateDashboard();
         renderProjects();
-        toast('seed.json cargado');
+        toast('datos cargados');
         return;
       }
     }
   } catch (_) { /* ignore */ }
-
-  // 2) fallback: parsear data/neocities-snapshot.html
   try {
     const r = await fetch('data/neocities-snapshot.html', { cache: 'no-store' });
     if (!r.ok) throw new Error('no snapshot');
@@ -1119,9 +1311,9 @@ async function tryFetchSeed() {
     saveState();
     updateDashboard();
     renderProjects();
-    toast(`snapshot parseado · ${s.projects.length} proyectos`);
+    toast(`cargados ${s.projects.length} proyectos desde neocities`);
   } catch (e) {
-    toast('no hay seed ni snapshot · pega el HTML o importa JSON');
+    toast('pega el HTML del neocities o importa un .json');
   }
 }
 
@@ -1135,7 +1327,7 @@ function parseHtmlFromTextarea() {
     updateDashboard();
     renderProjects();
     toast(`parseados ${s.projects.length} proyectos`);
-  } catch (e) { alert('error parseando: ' + e.message); }
+  } catch (e) { alert('error: ' + e.message); }
 }
 
 /* -------------------- init -------------------- */
@@ -1147,29 +1339,26 @@ function init() {
   updateDashboard();
   wireAuditorRules();
 
-  // dashboard actions
   $('#btn-parse-html').addEventListener('click', parseHtmlFromTextarea);
   $('#btn-fetch-seed').addEventListener('click', tryFetchSeed);
-  $('#btn-empty').addEventListener('click', () => { state = makeEmptyState(); saveState(); updateDashboard(); toast('vacío'); });
+  $('#btn-empty').addEventListener('click', () => { state = makeEmptyState(); saveState(); updateDashboard(); toast('listo'); });
 
-  // projects filters
-  ['proj-search','proj-filter-cat','proj-filter-type','proj-filter-status','proj-filter-hidden']
+  ['proj-search','proj-filter-cat','proj-filter-type','proj-filter-status']
     .forEach(id => $('#'+id).addEventListener('input', renderProjects));
   $('#btn-new-project').addEventListener('click', newProject);
+  $('#btn-manage-cats').addEventListener('click', toggleCatManager);
 
-  // auditor
   $('#btn-fetch-gh').addEventListener('click', fetchGh);
+  $('#btn-orphan-batch-add').addEventListener('click', applyOrphanBatch);
+  $('#btn-orphan-batch-ignore').addEventListener('click', ignoreOrphanBatch);
 
-  // health
   $('#btn-check-all').addEventListener('click', () => checkAll(false));
   $('#btn-check-custom').addEventListener('click', () => checkAll(true));
 
-  // export
   $('#btn-regen').addEventListener('click', regenExport);
   $('#btn-copy').addEventListener('click', copyExport);
   $('#btn-download').addEventListener('click', downloadExport);
 
-  // master JSON import/export
   $('#btn-import').addEventListener('click', triggerImport);
   $('#btn-export-json').addEventListener('click', exportMasterJson);
   $('#file-input').addEventListener('change', (e) => {
@@ -1177,10 +1366,8 @@ function init() {
     e.target.value = '';
   });
 
-  // theme
   $('#btn-theme').addEventListener('click', toggleTheme);
 
-  // intentar auto-carga de seed si no hay state
   if (!state.projects.length) tryFetchSeed();
 }
 
