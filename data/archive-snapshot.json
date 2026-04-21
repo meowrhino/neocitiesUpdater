@@ -1,0 +1,380 @@
+{
+  "welcome": {
+    "titulo": "meowrhino archive",
+    "studioUrl": "index.html"
+  },
+  "tools": [
+    { "nombre": "trackr", "url": "https://meowrhino.github.io/trackr/" },
+    { "nombre": "webP converter", "url": "https://meowrhino.github.io/imgToWeb/" },
+    { "nombre": "imgTo1600x900", "url": "https://meowrhino.github.io/imgTo1600x900/" },
+    { "nombre": "webM converter", "url": "https://meowrhino.github.io/videoToWeb/" },
+    { "nombre": "calculadora Impuestos", "url": "https://meowrhino.github.io/calculadoraInversa/" },
+    { "nombre": "facture generator", "url": "https://meowrhino.github.io/generadorFacturas/" },
+    { "nombre": "colorFun", "url": "https://meowrhino.github.io/colorFun/" },
+    { "nombre": "encuesta satisfacción", "url": "https://meowrhino.github.io/encuestaClientes/" },
+    { "nombre": "navicon converter", "url": "https://meowrhino.github.io/imgToNavicon/" },
+    { "nombre": "meowrhino tarifas", "url": "https://meowrhino.github.io/tarifasCalculadora/" },
+    { "nombre": "copiar y pegar sin formato", "url": "https://meowrhino.github.io/fcyp/" },
+    { "nombre": "IG follower checker", "url": "https://meowrhino.github.io/igChecker/" },
+    { "nombre": "IG @ generator", "url": "https://meowrhino.github.io/instagramNameGenerator/" },
+    { "nombre": "etymodict", "url": "https://meowrhino.github.io/etymodict/" },
+    { "nombre": "write", "url": "https://meowrhino.github.io/writingapp/" },
+    { "nombre": "guia setup github pages", "url": "https://meowrhino.github.io/guiaSetupGithubPages/" },
+    { "nombre": "faqAutonomos", "url": "https://meowrhino.github.io/faqAutonomos/" }
+  ],
+  "misc": [
+    {
+      "nombre": "AI (art direction)",
+      "url": "https://www.youtube.com/watch?v=S9Nv0K8pjLo"
+    },
+    {
+      "nombre": "bichi",
+      "url": "https://meowrhino.gitlab.io/bichi/"
+    },
+    {
+      "nombre": "CV01",
+      "links": [
+        { "label": "01", "url": "https://meowrhino.neocities.org/projects/cv01/cv_0.png" },
+        { "label": "02", "url": "https://meowrhino.neocities.org/projects/cv01/cv_1.png" },
+        { "label": "03", "url": "https://meowrhino.neocities.org/projects/cv01/cv_2.png" },
+        { "label": "download (mac)", "url": "https://mega.nz/#F!dlQWlIJK!f65Tz161WhWqD1TsYVSXTA" },
+        { "label": "gameplay", "url": "https://youtu.be/F_NGUAMIREI" }
+      ]
+    },
+    {
+      "nombre": "cubito",
+      "links": [
+        { "label": "video", "url": "https://mega.nz/#!BswTyShJ!3_w2PiNZnDeKSV2Lpe7MLNbrISanoJcDz9hsUccwof4" },
+        { "label": "joan", "url": "https://mega.nz/#!84g3zYDY!_D2w_dw216gmrz1KQUhw3EobnasxlCbQ3EmcPEP5Yto" },
+        { "label": "3", "url": "https://meowrhino.neocities.org/projects/cubito/IMG_9318.png" },
+        { "label": "portfolio", "url": "https://meowrhino.neocities.org/projects/cubito/Sin%20t%C3%ADtulo-12.pdf" }
+      ]
+    },
+    {
+      "nombre": "limon",
+      "url": "https://meowrhino.neocities.org/projects/cubito/IMG_9318.png"
+    },
+    {
+      "nombre": "entierro",
+      "links": [
+        { "label": "1", "url": "https://meowrhino.neocities.org/projects/entierro/velatori_2.png" },
+        { "label": "2", "url": "https://meowrhino.neocities.org/projects/entierro/enterrament_1.png" },
+        { "label": "3", "url": "https://meowrhino.neocities.org/projects/entierro/enterrament_2.png" },
+        { "label": "4", "url": "https://meowrhino.neocities.org/projects/entierro/enterrat_1.png" },
+        { "label": "5", "url": "https://meowrhino.neocities.org/projects/entierro/enterrat_2.png" },
+        { "label": "portfolio", "url": "https://meowrhino.neocities.org/projects/entierro/Sin%20t%C3%ADtulo-13.pdf" },
+        { "label": "bonus", "url": "https://mega.nz/#!s1YBhCzZ!bCFO8BC2voApKtSAZzMtOhltAi_w0YyEIhZd2agfqys" }
+      ]
+    },
+    {
+      "nombre": "casco",
+      "links": [
+        { "label": "0", "url": "https://meowrhino.neocities.org/projects/casco/DSC_0059%20copia2.png" },
+        { "label": "eura", "url": "https://meowrhino.neocities.org/projects/casco/DSC_0072%20copia.jpg" },
+        { "label": "casco", "url": "https://meowrhino.neocities.org/projects/casco/DSC_0512.jpeg" },
+        { "label": "dossier", "url": "https://meowrhino.neocities.org/projects/casco/Casco.pdf" }
+      ]
+    },
+    {
+      "nombre": "jungle",
+      "url": "https://mega.nz/fm/Q4gBXJYa"
+    },
+    {
+      "nombre": "joyicidios",
+      "links": [
+        { "label": "object", "url": "https://meowrhino.neocities.org/projects/joyicidios/Joyicidios_Manuel_Latour1.pdf" },
+        { "label": "human", "url": "https://meowrhino.neocities.org/projects/joyicidios/Joyicidios_Manuel_Latour2.pdf" }
+      ]
+    },
+    {
+      "nombre": "verdi",
+      "url": "https://www.figma.com/proto/yQE0i2BeTxN55QMbRtfIMA/verdi-manue-latour?page-id=109%3A10&type=design&node-id=109-11&viewport=102%2C367%2C0.25&t=CFAM2Go2Sb6FfnpI-1&scaling=scale-down&starting-point-node-id=109%3A11&show-proto-sidebar=1&mode=design"
+    },
+    {
+      "nombre": "ASAV",
+      "links": [
+        { "label": "1", "url": "https://meowrhino.neocities.org/projects/ASAV/1.png" },
+        { "label": "2", "url": "https://meowrhino.neocities.org/projects/ASAV/2.png" },
+        { "label": "3", "url": "https://meowrhino.neocities.org/projects/ASAV/3.png" },
+        { "label": "4", "url": "https://meowrhino.neocities.org/projects/ASAV/4.png" }
+      ]
+    },
+    {
+      "nombre": "yamigotchi",
+      "links": [
+        { "label": "portfolio", "url": "https://meowrhino.neocities.org/projects/yamigotchi/LATOUR_MANUEL_MEMORIAFINAL.pdf" },
+        { "label": "shop", "url": "https://mega.nz/#!lo5ShIoY!VtHiCccCkk5vApziwP1H3Y2ebebEkZcRJZQumQaq3Q0" },
+        { "label": "code", "url": "https://latourtilla.hotglue.me/?blanki_cody" }
+      ]
+    },
+    {
+      "nombre": "palomas",
+      "links": [
+        { "label": "0", "url": "https://meowrhino.neocities.org/projects/palomas/0.png" },
+        { "label": "1", "url": "https://meowrhino.neocities.org/projects/palomas/1.png" },
+        { "label": "2", "url": "https://meowrhino.neocities.org/projects/palomas/2.png" },
+        { "label": "3", "url": "https://meowrhino.neocities.org/projects/palomas/3.png" },
+        { "label": "4", "url": "https://meowrhino.neocities.org/projects/palomas/4.png" },
+        { "label": "5", "url": "https://meowrhino.neocities.org/projects/palomas/5.png" }
+      ]
+    },
+    {
+      "nombre": "paradians",
+      "links": [
+        { "label": "0", "url": "https://meowrhino.neocities.org/img/paradians/paradians_01.png" },
+        { "label": "1", "url": "https://meowrhino.neocities.org/img/paradians/paradians_02.png" },
+        { "label": "2", "url": "https://meowrhino.neocities.org/img/paradians/paradians_03.png" },
+        { "label": "3", "url": "https://meowrhino.neocities.org/img/paradians/paradians_04.png" },
+        { "label": "4", "url": "https://meowrhino.neocities.org/img/paradians/paradians_05.png" },
+        { "label": "5", "url": "https://meowrhino.neocities.org/img/paradians/paradians_06.png" },
+        { "label": "6", "url": "https://meowrhino.neocities.org/img/paradians/paradians_07.png" },
+        { "label": "7", "url": "https://meowrhino.neocities.org/img/paradians/paradians_08.png" },
+        { "label": "8", "url": "https://meowrhino.neocities.org/img/paradians/paradians_09.png" },
+        { "label": "9", "url": "https://meowrhino.neocities.org/img/paradians/paradians_10.png" },
+        { "label": "dance", "url": "https://meowrhino.neocities.org/img/paradians/parade_all.png" }
+      ]
+    },
+    {
+      "nombre": "img",
+      "links": [
+        { "label": "_", "url": "https://meowrhino.neocities.org/projects/insta/_.png" },
+        { "label": "why", "url": "https://meowrhino.neocities.org/projects/insta/why.png" },
+        { "label": "boat", "url": "https://meowrhino.neocities.org/projects/insta/barquito.png" },
+        { "label": "luna", "url": "https://mega.nz/file/R9wjlDaJ#n-8pm9jIMkgBDtg8HTmzHCcWTubNJYuR4-vjLT88aD0" },
+        { "label": "o", "url": "https://meowrhino.neocities.org/projects/insta/o.png" },
+        { "label": "boog", "url": "https://mega.nz/file/lxQFzZLA#mppVtvYamSo7fndY0VYNUBkx2_VNWi7dsHZYDU1ZzDI" },
+        { "label": "kiwi", "url": "https://meowrhino.neocities.org/projects/insta/kiwi2.jpg" },
+        { "label": "b5", "url": "https://meowrhino.neocities.org/projects/insta/b5_2.png" },
+        { "label": "tiburón", "url": "https://mega.nz/file/QxI2lbQA#A0DfMmgQjMQvLpuhWPJvGa0GssNyjvMqFMB0rSGUQb0" },
+        { "label": "glub", "url": "https://meowrhino.neocities.org/img/glub.png" },
+        { "label": "4444", "url": "https://meowrhino.neocities.org/projects/insta/4444.png" }
+      ]
+    },
+    {
+      "nombre": "odin-recipes",
+      "url": "https://meowrhino.github.io/odin-recipes/"
+    }
+  ],
+  "meowrhino": [
+    { "nombre": "profilePics", "url": "https://meowrhino.github.io/profilePics/" },
+    { "nombre": "arxiu.pdf", "url": "https://meowrhino.github.io/arxiu/" },
+    {
+      "nombre": "meowrhino clouds",
+      "links": [
+        { "label": "v1", "url": "https://meowrhino.github.io/clouds/" },
+        { "label": "v0", "url": "https://meowrhino.github.io/cloudsv0/" }
+      ]
+    },
+    { "nombre": "meowrhino archive", "url": "https://meowrhino.neocities.org/" },
+    { "nombre": "archivo kung fú", "url": "https://meowrhino.github.io/arwuchivo/" },
+    { "nombre": "cielo en barcelona", "url": "https://meowrhino.github.io/cielo/" },
+    {
+      "nombre": "becas digMeow",
+      "links": [
+        { "label": "v1", "url": "https://meowrhino.github.io/becasDigMeow_v1/" },
+        { "label": "v0", "url": "https://meowrhino.github.io/becasDigMeow_v0/" }
+      ]
+    }
+  ],
+  "games": [
+    { "nombre": "barcelona per eixample", "url": "https://meowrhino.neocities.org/barcelona.html" },
+    {
+      "nombre": "festa",
+      "links": [
+        { "label": "link", "url": "https://meowrhino.neocities.org/lafesta_old.html" },
+        { "label": "extended", "url": "https://meowrhino.neocities.org/lafesta.html" }
+      ]
+    },
+    { "nombre": "joc de la vida", "url": "https://meowrhino.github.io/gameOfLife/" },
+    { "nombre": "minesweeper v0", "url": "https://meowrhino.github.io/etchASketch/" },
+    { "nombre": "minesweeperV2", "url": "https://meowrhino.github.io/minesweeperV2/" },
+    { "nombre": "rockPaperScissors", "url": "https://meowrhino.github.io/rockPaperScissors/" },
+    { "nombre": "5cards", "url": "https://meowrhino.github.io/5cards/" },
+    { "nombre": "cards1", "url": "https://meowrhino.github.io/cards1/" },
+    { "nombre": "letterSoup", "url": "https://meowrhino.github.io/letterSoup/" },
+    { "nombre": "horseLife", "url": "https://meowrhino.github.io/horseLife/" }
+  ],
+  "experiments": [
+    { "nombre": "diego3", "url": "https://meowrhino.github.io/diego3/" },
+    { "nombre": "stars generator", "url": "https://meowrhino.github.io/randomStars/" },
+    { "nombre": "buddhabrot generator", "url": "https://meowrhino.github.io/buddhabrot/" },
+    {
+      "nombre": "iching",
+      "links": [
+        { "label": "music", "url": "https://meowrhino.github.io/8guamusic1" },
+        { "label": "future", "url": "https://meowrhino.github.io/8guafuture1/" },
+        { "label": "trigrama", "url": "https://meowrhino.github.io/trigrama/" }
+      ]
+    },
+    { "nombre": "ichingPic", "url": "https://meowrhino.github.io/ichingPic/" },
+    { "nombre": "zodiac chart", "url": "https://meowrhino.github.io/wholeSignHouseChart/" },
+    { "nombre": "html day 2025", "url": "https://meowrhino.github.io/htmlDay2025/" },
+    { "nombre": "mediocre learner", "url": "https://meowrhino.gitlab.io/mediocre-learner/" },
+    { "nombre": "atalanta library", "url": "https://meowrhino.github.io/atalanta/" },
+    { "nombre": "apoloASCII", "url": "https://meowrhino.github.io/apoloASCII/" },
+    { "nombre": "neolib10", "url": "https://meowrhino.github.io/neolib10/" },
+    { "nombre": "solar5", "url": "https://meowrhino.github.io/solar5/" },
+    { "nombre": "a", "url": "https://meowrhino.github.io/a/" },
+    { "nombre": "fake matcha cafe", "url": "https://matchacafe.manus.space" },
+    { "nombre": "ryf", "url": "https://meowrhino.github.io/ryf/" },
+    {
+      "nombre": "investigaciones",
+      "links": [
+        { "label": "001", "url": "https://meowrhino.github.io/investigaciones_001/" },
+        { "label": "002", "url": "https://meowrhino.github.io/investigaciones_002/" },
+        { "label": "003", "url": "https://meowrhino.github.io/investigaciones_003/" },
+        { "label": "004", "url": "https://meowrhino.github.io/investigaciones_004/" }
+      ]
+    }
+  ],
+  "social": [
+    { "nombre": "piupiu", "url": "https://piulerv2.manuellatourf.workers.dev/" },
+    { "nombre": "piuler", "url": "https://piuler.onrender.com/" },
+    { "nombre": "gridChat", "url": "https://meowrhino.github.io/gridChat/" },
+    { "nombre": "messagePark", "url": "https://meowrhino.github.io/messagePark/" },
+    { "nombre": "projectChat", "url": "https://meowrhino.github.io/projectChat/" }
+  ],
+  "unfinished": [
+    { "nombre": "rikamichieCard", "url": "https://meowrhino.github.io/rikamichiev0/" },
+    { "nombre": "zumiño.ppt", "url": "https://meowrhino.github.io/zumino/" },
+    {
+      "nombre": "plantitas",
+      "links": [
+        { "label": "test", "url": "https://meowrhino.github.io/plantitas/" },
+        { "label": "prototype", "url": "https://meowrhino.github.io/latrini/" }
+      ]
+    },
+    {
+      "nombre": "safeamorx",
+      "links": [
+        { "label": "WIP", "url": "https://meowrhino.github.io/safeAmorx/" },
+        { "label": "v2", "url": "https://meowrhino.github.io/safeAmorxV2/" }
+      ]
+    },
+    { "nombre": "first tarifas (deprecated)", "url": "https://meowrhino.github.io/tarifas_DEPRECATED/" },
+    { "nombre": "linktree", "url": "https://meowrhino.github.io/linktree/" },
+    { "nombre": "tinnitusRelief", "url": "https://meowrhino.github.io/tinnitusRelief/" },
+    { "nombre": "discriminationTEST", "url": "https://meowrhino.github.io/discriminationtest/" },
+    { "nombre": "ableme", "url": "https://meowrhino.github.io/ableme/admin.html" },
+    { "nombre": "ethereal TEM", "url": "https://meowrhino.github.io/TEM/" },
+    { "nombre": "oca", "url": "https://meowrhino.github.io/oca/" },
+    { "nombre": "las xordxs", "url": "https://meowrhino.github.io/jordiyordiyordyiordi/" },
+    { "nombre": "directorioLD", "url": "https://meowrhino.github.io/directorio/" },
+    { "nombre": "tarifas2026 (deprecated)", "url": "https://meowrhino.github.io/tarifas2026_DEPRECATED/" },
+    { "nombre": "videoToLilVideo (deprecated)", "url": "https://meowrhino.github.io/videoToLilVideo_DEPRECATED/" },
+    { "nombre": "trackerTest", "url": "https://meowrhino.github.io/trackerTest/" },
+    { "nombre": "quests", "url": "https://meowrhino.github.io/quests/" },
+    { "nombre": "registro", "url": "https://meowrhino.github.io/registro/" },
+    { "nombre": "MTC", "url": "https://meowrhino.github.io/MTC/" },
+    { "nombre": "receptesdelapats", "url": "https://meowrhino.github.io/receptesdelapats/" },
+    { "nombre": "txttohtml", "url": "https://meowrhino.github.io/txttohtml/" },
+    { "nombre": "taxrhino", "url": "https://meowrhino.github.io/taxrhino/" },
+    { "nombre": "grid-web-generator", "url": "https://meowrhino.github.io/grid-web-generator/" },
+    { "nombre": "paintOnline", "url": "https://meowrhino.github.io/paintOnline/" },
+    { "nombre": "pdfs", "url": "https://meowrhino.github.io/pdfs/" }
+  ],
+  "texts": [
+    {
+      "nombre": "notas",
+      "links": [
+        { "label": "notas5", "url": "https://meowrhino.github.io/notas5/" },
+        { "label": "notas4", "url": "https://meowrhino.github.io/notas4/" },
+        { "label": "notas3", "url": "https://meowrhino.github.io/notas3/" },
+        { "label": "notas2", "url": "https://meowrhino.github.io/notas2/" },
+        { "label": "notas", "url": "https://meowrhino.github.io/notas/" }
+      ]
+    },
+    { "nombre": "TFG", "url": "https://meowrhino.cargo.site/tfg" },
+    {
+      "nombre": "hopeko",
+      "links": [
+        { "label": "hopeko2", "url": "https://meowrhino.github.io/hopeko2/" },
+        { "label": "hopeko", "url": "https://meowrhino.github.io/hopeko/" }
+      ]
+    },
+    {
+      "nombre": "la torra manel",
+      "links": [
+        { "label": "I", "url": "https://www.indiexpo.net/es/games/la-torra-manel" },
+        { "label": "II", "url": "https://www.indiexpo.net/es/games/la-2a-torre-manel" },
+        { "label": "III", "url": "https://www.indiexpo.net/es/games/la-3era-torra-manel-2" }
+      ]
+    },
+    { "nombre": "login essay", "url": "https://mega.nz/file/JwZk3IIB#_vWw1ZMt0IV4vBIcd989K7yB7eJTfJriNk5PCnykViQ" },
+    { "nombre": "somnis", "url": "https://meowrhino.github.io/somnis/" },
+    { "nombre": "historias", "url": "https://meowrhino.github.io/historias/" }
+  ],
+  "WIP": [
+    {
+      "nombre": "barbara wong",
+      "url": "https://meowrhino.github.io/barbaraWong/"
+    },
+    {
+      "nombre": "viciostorpes",
+      "links": [
+        { "label": "WIP", "url": "https://meowrhino.github.io/viciostorpes/" },
+        { "label": "v2", "url": "https://meowrhino.github.io/viciostorpesV2/" }
+      ]
+    },
+    {
+      "nombre": "ladiega",
+      "url": "https://meowrhino.github.io/ladiega/"
+    },
+    {
+      "nombre": "christine",
+      "url": "https://meowrhino.github.io/christine/"
+    }
+  ],
+  "hidden": [
+    {
+      "nombre": "blogs adolescentes",
+      "links": [
+        { "label": "1", "url": "https://aheartthatrescueshearts.blogspot.com/" },
+        { "label": "2", "url": "https://freefromninepointeight.blogspot.com/" }
+      ]
+    },
+    {
+      "nombre": "mi primera web",
+      "url": "https://lethe0.tumblr.com/"
+    }
+  ],
+  "sidequests": [
+    { "nombre": "diegosanmarcos", "url": "https://meowrhino.github.io/diegosanmarcos/" },
+    { "nombre": "maxito", "url": "https://meowrhino.github.io/maxito/" },
+    { "nombre": "rikamichie", "links": [{ "label": "repo", "url": "https://meowrhino.github.io/rikamichie/" }, { "label": "web", "url": "https://rikamichie.com" }] },
+    { "nombre": "mikesx cd's", "links": [{ "label": "repo", "url": "https://meowrhino.github.io/mikesx/" }, { "label": "web", "url": "https://mikebros.com" }] },
+    { "nombre": "jaume clotet", "links": [{ "label": "repo", "url": "https://meowrhino.github.io/jaumeclotet/" }, { "label": "web", "url": "https://jaumeclotet.com" }] },
+    { "nombre": "conor", "url": "https://meowrhino.github.io/conor/" },
+    { "nombre": "paula barjau", "url": "https://meowrhino.github.io/paulabarjau/" },
+    { "nombre": "miranda", "links": [{ "label": "repo", "url": "https://meowrhino.github.io/mirandaperezhita/" }, { "label": "web", "url": "https://mirandaperezhita.com" }] },
+    { "nombre": "andrea carilla", "links": [{ "label": "repo", "url": "https://meowrhino.github.io/andreacarilla/" }, { "label": "web", "url": "https://andreacarilla.work" }] },
+    { "nombre": "mokakopa", "links": [{ "label": "repo", "url": "https://meowrhino.github.io/mokakopa/" }, { "label": "web", "url": "https://mokakopa.com" }] },
+    { "nombre": "ana lópez serrano", "links": [{ "label": "repo", "url": "https://meowrhino.github.io/twinMokakopa/" }, { "label": "web", "url": "https://analopezserrano.com" }] },
+    { "nombre": "e3000", "links": [{ "label": "repo", "url": "https://meowrhino.github.io/e300/" }, { "label": "web", "url": "https://estructuras3000.com" }] },
+    { "nombre": "elmundodelasjordis", "links": [{ "label": "repo", "url": "https://meowrhino.github.io/jordis/" }, { "label": "web", "url": "https://elmundodelasjordis.com" }] },
+    { "nombre": "berta esteve", "links": [{ "label": "repo", "url": "https://meowrhino.github.io/snerta/" }, { "label": "web", "url": "https://bertaesteve.cat" }] },
+    { "nombre": "hifas studio", "url": "https://meowrhino.github.io/anakatana/" },
+    { "nombre": "villa granota", "url": "https://meowrhino.github.io/villagranota/" }
+  ],
+  "facts": [
+    "Al videojuego al que más he jugado es al Pokémon Zafiro (282 horas)",
+    "me gustan mucho los animes de chicas con superpoderes",
+    "mi libro favorito es el Circo de la Noche",
+    "mi novela visual favorita es Umineko no Naku Koro ni Chiru",
+    "mi primera canción de vocaloid fue ésta (youtube)",
+    "mi anime favorito es Mahou Shoujo Madoka Magica",
+    "mi estudio de animación favorito es Shaft",
+    "empecé filología clásica e inglesa en la UAB para luego cambiarme a arte y diseño en la Massana",
+    "durante 3 años hice cosplay: Makoto Tachibana, Garnet, Sanageyama y Oikawa",
+    "hago canto moderno desde hace 2 años y medio",
+    "llevo viendo anime desde hace como 10 años",
+    "mi plato favorito de comida es el puchero",
+    "tengo un lunar en el lagrimar izquierdo",
+    "mi fruto seco favorito es el anacardo",
+    "nací en el puerto de santa maría, cádiz",
+    "soy piscis ascendente leo luna escorpio",
+    "me he pasado las 100 mazmorras del Paper Mario",
+    "he entrado en Berghain",
+    "la historia del nombre 'meowrhino' viene de cuando un amigo comentó 'manumeorino' en instagram y evolucionó hasta perder el manu"
+  ]
+}

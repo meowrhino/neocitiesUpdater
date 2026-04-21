@@ -1,0 +1,858 @@
+{
+  "main quests": [
+    {
+      "name": "meowrhino.studio",
+      "links": [
+        "https://meowrhino.github.io/becasDigMeow/"
+      ]
+    }
+  ],
+  "side quests": [
+    {
+      "name": "diegosanmarcos",
+      "links": [
+        "https://meowrhino.github.io/diegosanmarcos/"
+      ]
+    },
+    {
+      "name": "maxito",
+      "links": [
+        "https://meowrhino.github.io/maxito/"
+      ]
+    },
+    {
+      "name": "rikamichie",
+      "links": [
+        "https://meowrhino.github.io/rikamichie/",
+        "https://rikamichie.com"
+      ]
+    },
+    {
+      "name": "mikesx cd's",
+      "links": [
+        "https://meowrhino.github.io/mikesx/",
+        "https://mikebros.com"
+      ]
+    },
+    {
+      "name": "jaume clotet",
+      "links": [
+        "https://meowrhino.github.io/jaumeclotet/",
+        "https://jaumeclotet.com"
+      ]
+    },
+    {
+      "name": "conor",
+      "links": [
+        "https://meowrhino.github.io/conor/"
+      ]
+    },
+    {
+      "name": "paula barjau",
+      "links": [
+        "https://meowrhino.github.io/paulabarjau/"
+      ]
+    },
+    {
+      "name": "miranda",
+      "links": [
+        "https://meowrhino.github.io/mirandaperezhita/",
+        "https://mirandaperezhita.com"
+      ]
+    },
+    {
+      "name": "andrea carilla",
+      "links": [
+        "https://meowrhino.github.io/andreacarilla/",
+        "https://andreacarilla.work"
+      ]
+    },
+    {
+      "name": "mokakopa",
+      "links": [
+        "https://meowrhino.github.io/mokakopa/",
+        "https://mokakopa.com"
+      ]
+    },
+    {
+      "name": "ana lópez serrano",
+      "links": [
+        "https://meowrhino.github.io/twinMokakopa/",
+        "https://analopezserrano.com"
+      ]
+    },
+    {
+      "name": "e3000",
+      "links": [
+        "https://meowrhino.github.io/e300/",
+        "https://estructuras3000.com"
+      ]
+    },
+    {
+      "name": "elmundodelasjordis",
+      "links": [
+        "https://meowrhino.github.io/jordis/",
+        "https://elmundodelasjordis.com"
+      ]
+    },
+    {
+      "name": "berta esteve",
+      "links": [
+        "https://meowrhino.github.io/snerta/",
+        "https://bertaesteve.cat"
+      ]
+    },
+    {
+      "name": "hifas studio",
+      "links": [
+        "https://meowrhino.github.io/anakatana/"
+      ]
+    },
+    {
+      "name": "villa granota",
+      "links": [
+        "https://meowrhino.github.io/villagranota/"
+      ]
+    }
+  ],
+  "WIP": [
+    {
+      "name": "barbara wong",
+      "links": [
+        "https://meowrhino.github.io/barbaraWong/"
+      ]
+    },
+    {
+      "name": "viciostorpes",
+      "links": [
+        "https://meowrhino.github.io/viciostorpes/",
+        "https://meowrhino.github.io/viciostorpesV2/"
+      ]
+    },
+    {
+      "name": "ladiega",
+      "links": [
+        "https://meowrhino.github.io/ladiega/"
+      ]
+    },
+    {
+      "name": "christine",
+      "links": [
+        "https://meowrhino.github.io/christine/"
+      ]
+    }
+  ],
+  "meowrhino's world": [
+    {
+      "name": "profilePics",
+      "links": [
+        "https://meowrhino.github.io/profilePics/"
+      ]
+    },
+    {
+      "name": "arxiu.pdf",
+      "links": [
+        "https://meowrhino.github.io/arxiu/"
+      ]
+    },
+    {
+      "name": "meowrhino clouds",
+      "links": [
+        "https://meowrhino.github.io/clouds/",
+        "https://meowrhino.github.io/cloudsv0/"
+      ]
+    },
+    {
+      "name": "meowrhino archive",
+      "links": [
+        "https://meowrhino.neocities.org/"
+      ]
+    },
+    {
+      "name": "archivo kung fú",
+      "links": [
+        "https://meowrhino.github.io/arwuchivo/"
+      ]
+    },
+    {
+      "name": "cielo en barcelona",
+      "links": [
+        "https://meowrhino.github.io/cielo/"
+      ]
+    },
+    {
+      "name": "becas digMeow",
+      "links": [
+        "https://meowrhino.github.io/becasDigMeow_v1/",
+        "https://meowrhino.github.io/becasDigMeow_v0/"
+      ]
+    }
+  ],
+  "tools": [
+    {
+      "name": "trackr",
+      "links": [
+        "https://meowrhino.github.io/trackr/"
+      ]
+    },
+    {
+      "name": "webP converter",
+      "links": [
+        "https://meowrhino.github.io/imgToWeb/"
+      ]
+    },
+    {
+      "name": "imgTo1600x900",
+      "links": [
+        "https://meowrhino.github.io/imgTo1600x900/"
+      ]
+    },
+    {
+      "name": "webM converter",
+      "links": [
+        "https://meowrhino.github.io/videoToWeb/"
+      ]
+    },
+    {
+      "name": "calculadora Impuestos",
+      "links": [
+        "https://meowrhino.github.io/calculadoraInversa/"
+      ]
+    },
+    {
+      "name": "facture generator",
+      "links": [
+        "https://meowrhino.github.io/generadorFacturas/"
+      ]
+    },
+    {
+      "name": "colorFun",
+      "links": [
+        "https://meowrhino.github.io/colorFun/"
+      ]
+    },
+    {
+      "name": "encuesta satisfacción",
+      "links": [
+        "https://meowrhino.github.io/encuestaClientes/"
+      ]
+    },
+    {
+      "name": "navicon converter",
+      "links": [
+        "https://meowrhino.github.io/imgToNavicon/"
+      ]
+    },
+    {
+      "name": "meowrhino tarifas",
+      "links": [
+        "https://meowrhino.github.io/tarifasCalculadora/"
+      ]
+    },
+    {
+      "name": "copiar y pegar sin formato",
+      "links": [
+        "https://meowrhino.github.io/fcyp/"
+      ]
+    },
+    {
+      "name": "IG follower checker",
+      "links": [
+        "https://meowrhino.github.io/igChecker/"
+      ]
+    },
+    {
+      "name": "IG @ generator",
+      "links": [
+        "https://meowrhino.github.io/instagramNameGenerator/"
+      ]
+    },
+    {
+      "name": "etymodict",
+      "links": [
+        "https://meowrhino.github.io/etymodict/"
+      ]
+    },
+    {
+      "name": "write",
+      "links": [
+        "https://meowrhino.github.io/writingapp/"
+      ]
+    },
+    {
+      "name": "guia setup github pages",
+      "links": [
+        "https://meowrhino.github.io/guiaSetupGithubPages/"
+      ]
+    },
+    {
+      "name": "faqAutonomos",
+      "links": [
+        "https://meowrhino.github.io/faqAutonomos/"
+      ]
+    }
+  ],
+  "games": [
+    {
+      "name": "barcelona per eixample",
+      "links": [
+        "barcelona.html"
+      ]
+    },
+    {
+      "name": "festa",
+      "links": [
+        "lafesta_old.html",
+        "lafesta.html"
+      ]
+    },
+    {
+      "name": "joc de la vida",
+      "links": [
+        "https://meowrhino.github.io/gameOfLife/"
+      ]
+    },
+    {
+      "name": "minesweeper",
+      "links": [
+        "https://meowrhino.github.io/etchASketch/"
+      ]
+    },
+    {
+      "name": "minesweeperV2",
+      "links": [
+        "https://meowrhino.github.io/minesweeperV2/"
+      ]
+    },
+    {
+      "name": "rockPaperScissors",
+      "links": [
+        "https://meowrhino.github.io/rockPaperScissors/"
+      ]
+    },
+    {
+      "name": "5cards",
+      "links": [
+        "https://meowrhino.github.io/5cards/"
+      ]
+    },
+    {
+      "name": "cards1",
+      "links": [
+        "https://meowrhino.github.io/cards1/"
+      ]
+    },
+    {
+      "name": "letterSoup",
+      "links": [
+        "https://meowrhino.github.io/letterSoup/"
+      ]
+    },
+    {
+      "name": "horseLife",
+      "links": [
+        "https://meowrhino.github.io/horseLife/"
+      ]
+    }
+  ],
+  "experiments": [
+    {
+      "name": "diego3",
+      "links": [
+        "https://meowrhino.github.io/diego3/"
+      ]
+    },
+    {
+      "name": "stars generator",
+      "links": [
+        "https://meowrhino.github.io/randomStars/"
+      ]
+    },
+    {
+      "name": "buddhabrot generator",
+      "links": [
+        "https://meowrhino.github.io/buddhabrot/"
+      ]
+    },
+    {
+      "name": "iching",
+      "links": [
+        "https://meowrhino.github.io/8guamusic1",
+        "https://meowrhino.github.io/8guafuture1/",
+        "https://meowrhino.github.io/trigrama/"
+      ]
+    },
+    {
+      "name": "ichingPic",
+      "links": [
+        "https://meowrhino.github.io/ichingPic/"
+      ]
+    },
+    {
+      "name": "whole sign house zodiac chart",
+      "links": [
+        "https://meowrhino.github.io/wholeSignHouseChart/"
+      ]
+    },
+    {
+      "name": "html day 2025",
+      "links": [
+        "https://meowrhino.github.io/htmlDay2025/"
+      ]
+    },
+    {
+      "name": "mediocre learner",
+      "links": [
+        "https://meowrhino.gitlab.io/mediocre-learner/"
+      ]
+    },
+    {
+      "name": "atalanta library",
+      "links": [
+        "https://meowrhino.github.io/atalanta/"
+      ]
+    },
+    {
+      "name": "apoloASCII",
+      "links": [
+        "https://meowrhino.github.io/apoloASCII/"
+      ]
+    },
+    {
+      "name": "neolib10",
+      "links": [
+        "https://meowrhino.github.io/neolib10/"
+      ]
+    },
+    {
+      "name": "solar5",
+      "links": [
+        "https://meowrhino.github.io/solar5/"
+      ]
+    },
+    {
+      "name": "a",
+      "links": [
+        "https://meowrhino.github.io/a/"
+      ]
+    },
+    {
+      "name": "fake matcha cafe",
+      "links": [
+        "https://matchacafe.manus.space"
+      ]
+    },
+    {
+      "name": "ryf",
+      "links": [
+        "https://meowrhino.github.io/ryf/"
+      ]
+    },
+    {
+      "name": "investigaciones",
+      "links": [
+        "https://meowrhino.github.io/investigaciones_001/",
+        "https://meowrhino.github.io/investigaciones_002/",
+        "https://meowrhino.github.io/investigaciones_003/",
+        "https://meowrhino.github.io/investigaciones_004/"
+      ]
+    }
+  ],
+  "social apps": [
+    {
+      "name": "piupiu",
+      "links": [
+        "https://piulerv2.manuellatourf.workers.dev/"
+      ]
+    },
+    {
+      "name": "piuler",
+      "links": [
+        "https://piuler.onrender.com/"
+      ]
+    },
+    {
+      "name": "gridChat",
+      "links": [
+        "https://meowrhino.github.io/gridChat/"
+      ]
+    },
+    {
+      "name": "messagePark",
+      "links": [
+        "https://meowrhino.github.io/messagePark/"
+      ]
+    },
+    {
+      "name": "projectChat",
+      "links": [
+        "https://meowrhino.github.io/projectChat/"
+      ]
+    }
+  ],
+  "unfinished apps": [
+    {
+      "name": "rikamichieCard",
+      "links": [
+        "https://meowrhino.github.io/rikamichiev0/"
+      ]
+    },
+    {
+      "name": "zumiño.ppt",
+      "links": [
+        "https://meowrhino.github.io/zumino/"
+      ]
+    },
+    {
+      "name": "plantitas",
+      "links": [
+        "https://meowrhino.github.io/plantitas/",
+        "https://meowrhino.github.io/latrini/"
+      ]
+    },
+    {
+      "name": "safeamorx",
+      "links": [
+        "https://meowrhino.github.io/safeAmorx/",
+        "https://meowrhino.github.io/safeAmorxV2/"
+      ]
+    },
+    {
+      "name": "first tarifas (deprecated)",
+      "links": [
+        "https://meowrhino.github.io/tarifas_DEPRECATED/"
+      ]
+    },
+    {
+      "name": "linktree",
+      "links": [
+        "https://meowrhino.github.io/linktree/"
+      ]
+    },
+    {
+      "name": "tinnitusRelief",
+      "links": [
+        "https://meowrhino.github.io/tinnitusRelief/"
+      ]
+    },
+    {
+      "name": "discriminationTEST",
+      "links": [
+        "https://meowrhino.github.io/discriminationtest/"
+      ]
+    },
+    {
+      "name": "ableme",
+      "links": [
+        "https://meowrhino.github.io/ableme/admin.html"
+      ]
+    },
+    {
+      "name": "ethereal TEM",
+      "links": [
+        "https://meowrhino.github.io/TEM/"
+      ]
+    },
+    {
+      "name": "oca",
+      "links": [
+        "https://meowrhino.github.io/oca/"
+      ]
+    },
+    {
+      "name": "las xordxs",
+      "links": [
+        "https://meowrhino.github.io/jordiyordiyordyiordi/"
+      ]
+    },
+    {
+      "name": "directorioLD",
+      "links": [
+        "https://meowrhino.github.io/directorio/"
+      ]
+    },
+    {
+      "name": "tarifas2026 (deprecated)",
+      "links": [
+        "https://meowrhino.github.io/tarifas2026_DEPRECATED/"
+      ]
+    },
+    {
+      "name": "videoToLilVideo (deprecated)",
+      "links": [
+        "https://meowrhino.github.io/videoToLilVideo_DEPRECATED/"
+      ]
+    },
+    {
+      "name": "trackerTest",
+      "links": [
+        "https://meowrhino.github.io/trackerTest/"
+      ]
+    },
+    {
+      "name": "quests",
+      "links": [
+        "https://meowrhino.github.io/quests/"
+      ]
+    },
+    {
+      "name": "registro",
+      "links": [
+        "https://meowrhino.github.io/registro/"
+      ]
+    },
+    {
+      "name": "MTC",
+      "links": [
+        "https://meowrhino.github.io/MTC/"
+      ]
+    },
+    {
+      "name": "receptesdelapats",
+      "links": [
+        "https://meowrhino.github.io/receptesdelapats/"
+      ]
+    },
+    {
+      "name": "txttohtml",
+      "links": [
+        "https://meowrhino.github.io/txttohtml/"
+      ]
+    },
+    {
+      "name": "taxrhino",
+      "links": [
+        "https://meowrhino.github.io/taxrhino/"
+      ]
+    },
+    {
+      "name": "grid-web-generator",
+      "links": [
+        "https://meowrhino.github.io/grid-web-generator/"
+      ]
+    },
+    {
+      "name": "paintOnline",
+      "links": [
+        "https://meowrhino.github.io/paintOnline/"
+      ]
+    },
+    {
+      "name": "pdfs",
+      "links": [
+        "https://meowrhino.github.io/pdfs/"
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "name": "notas",
+      "links": [
+        "https://meowrhino.github.io/notas5/",
+        "https://meowrhino.github.io/notas4/",
+        "https://meowrhino.github.io/notas3/",
+        "https://meowrhino.github.io/notas2/",
+        "https://meowrhino.github.io/notas/"
+      ]
+    },
+    {
+      "name": "TFG",
+      "links": [
+        "https://meowrhino.cargo.site/tfg"
+      ]
+    },
+    {
+      "name": "hopeko",
+      "links": [
+        "https://meowrhino.github.io/hopeko2/",
+        "https://meowrhino.github.io/hopeko/"
+      ]
+    },
+    {
+      "name": "la torra manel",
+      "links": [
+        "https://www.indiexpo.net/es/games/la-torra-manel",
+        "https://www.indiexpo.net/es/games/la-2a-torre-manel",
+        "https://www.indiexpo.net/es/games/la-3era-torra-manel-2"
+      ]
+    },
+    {
+      "name": "login essay",
+      "links": [
+        "https://mega.nz/file/JwZk3IIB#_vWw1ZMt0IV4vBIcd989K7yB7eJTfJriNk5PCnykViQ"
+      ]
+    },
+    {
+      "name": "somnis",
+      "links": [
+        "https://meowrhino.github.io/somnis/"
+      ]
+    },
+    {
+      "name": "historias",
+      "links": [
+        "https://meowrhino.github.io/historias/"
+      ]
+    }
+  ],
+  "misc": [
+    {
+      "name": "AI",
+      "links": [
+        "https://www.youtube.com/watch?v=S9Nv0K8pjLo&ab_channel=BALMA"
+      ]
+    },
+    {
+      "name": "bichi",
+      "links": [
+        "https://meowrhino.gitlab.io/bichi/"
+      ]
+    },
+    {
+      "name": "CV01",
+      "links": [
+        "https://meowrhino.neocities.org/projects/cv01/cv_0.png",
+        "https://meowrhino.neocities.org/projects/cv01/cv_1.png",
+        "https://meowrhino.neocities.org/projects/cv01/cv_2.png",
+        "https://mega.nz/#F!dlQWlIJK!f65Tz161WhWqD1TsYVSXTA",
+        "https://youtu.be/F_NGUAMIREI"
+      ]
+    },
+    {
+      "name": "cubito",
+      "links": [
+        "https://mega.nz/#!BswTyShJ!3_w2PiNZnDeKSV2Lpe7MLNbrISanoJcDz9hsUccwof4",
+        "https://mega.nz/#!84g3zYDY!_D2w_dw216gmrz1KQUhw3EobnasxlCbQ3EmcPEP5Yto",
+        "https://meowrhino.neocities.org/projects/cubito/IMG_9318.png",
+        "https://meowrhino.neocities.org/projects/cubito/Sin título-12.pdf"
+      ]
+    },
+    {
+      "name": "limon",
+      "links": [
+        "https://meowrhino.neocities.org/projects/cubito/IMG_9318.png"
+      ]
+    },
+    {
+      "name": "entierro",
+      "links": [
+        "https://meowrhino.neocities.org/projects/entierro/velatori_2.png",
+        "https://meowrhino.neocities.org/projects/entierro/enterrament_1.png",
+        "https://meowrhino.neocities.org/projects/entierro/enterrament_2.png",
+        "https://meowrhino.neocities.org/projects/entierro/enterrat_1.png",
+        "https://meowrhino.neocities.org/projects/entierro/enterrat_2.png",
+        "https://meowrhino.neocities.org/projects/entierro/Sin título-13.pdf",
+        "https://mega.nz/#!s1YBhCzZ!bCFO8BC2voApKtSAZzMtOhltAi_w0YyEIhZd2agfqys"
+      ]
+    },
+    {
+      "name": "casco",
+      "links": [
+        "https://meowrhino.neocities.org/projects/casco/DSC_0059%20copia2.png",
+        "https://meowrhino.neocities.org/projects/casco/DSC_0072%20copia.jpg",
+        "https://meowrhino.neocities.org/projects/casco/DSC_0512.jpeg",
+        "https://meowrhino.neocities.org/projects/casco/Casco.pdf"
+      ]
+    },
+    {
+      "name": "jungle",
+      "links": [
+        "https://mega.nz/fm/Q4gBXJYa"
+      ]
+    },
+    {
+      "name": "joyicidios",
+      "links": [
+        "https://meowrhino.neocities.org/projects/joyicidios/Joyicidios_Manuel_Latour1.pdf",
+        "https://meowrhino.neocities.org/projects/joyicidios/Joyicidios_Manuel_Latour2.pdf"
+      ]
+    },
+    {
+      "name": "verdi",
+      "links": [
+        "https://www.figma.com/proto/yQE0i2BeTxN55QMbRtfIMA/verdi-manue-latour?page-id=109%3A10&type=design&node-id=109-11&viewport=102%2C367%2C0.25&t=CFAM2Go2Sb6FfnpI-1&scaling=scale-down&starting-point-node-id=109%3A11&show-proto-sidebar=1&mode=design"
+      ]
+    },
+    {
+      "name": "ASAV",
+      "links": [
+        "projects/ASAV/1.png",
+        "https://meowrhino.neocities.org/projects/ASAV/2.png",
+        "https://meowrhino.neocities.org/projects/ASAV/3.png",
+        "https://meowrhino.neocities.org/projects/ASAV/4.png"
+      ]
+    },
+    {
+      "name": "yamigotchi",
+      "links": [
+        "https://meowrhino.neocities.org/projects/yamigotchi/LATOUR_MANUEL_MEMORIAFINAL.pdf",
+        "https://mega.nz/#!lo5ShIoY!VtHiCccCkk5vApziwP1H3Y2ebebEkZcRJZQumQaq3Q0",
+        "https://latourtilla.hotglue.me/?blanki_cody"
+      ]
+    },
+    {
+      "name": "palomas",
+      "links": [
+        "https://meowrhino.neocities.org/projects/palomas/0.png",
+        "https://meowrhino.neocities.org/projects/palomas/1.png",
+        "https://meowrhino.neocities.org/projects/palomas/2.png",
+        "https://meowrhino.neocities.org/projects/palomas/3.png",
+        "https://meowrhino.neocities.org/projects/palomas/4.png",
+        "https://meowrhino.neocities.org/projects/palomas/5.png"
+      ]
+    },
+    {
+      "name": "paradians",
+      "links": [
+        "https://meowrhino.neocities.org/img/paradians/paradians_01.png",
+        "https://meowrhino.neocities.org/img/paradians/paradians_02.png",
+        "https://meowrhino.neocities.org/img/paradians/paradians_03.png",
+        "https://meowrhino.neocities.org/img/paradians/paradians_04.png",
+        "https://meowrhino.neocities.org/img/paradians/paradians_05.png",
+        "https://meowrhino.neocities.org/img/paradians/paradians_06.png",
+        "https://meowrhino.neocities.org/img/paradians/paradians_07.png",
+        "https://meowrhino.neocities.org/img/paradians/paradians_08.png",
+        "https://meowrhino.neocities.org/img/paradians/paradians_09.png",
+        "https://meowrhino.neocities.org/img/paradians/paradians_10.png",
+        "https://meowrhino.neocities.org/img/paradians/parade_all.png"
+      ]
+    },
+    {
+      "name": "img",
+      "links": [
+        "https://meowrhino.neocities.org/projects/insta/_.png",
+        "https://meowrhino.neocities.org/projects/insta/why.png",
+        "https://meowrhino.neocities.org/projects/insta/barquito.png",
+        "https://mega.nz/file/R9wjlDaJ#n-8pm9jIMkgBDtg8HTmzHCcWTubNJYuR4-vjLT88aD0",
+        "https://meowrhino.neocities.org/projects/insta/o.png",
+        "https://mega.nz/file/lxQFzZLA#mppVtvYamSo7fndY0VYNUBkx2_VNWi7dsHZYDU1ZzDI",
+        "https://meowrhino.neocities.org/projects/insta/kiwi2.jpg",
+        "https://meowrhino.neocities.org/projects/insta/b5_2.png",
+        "https://mega.nz/file/QxI2lbQA#A0DfMmgQjMQvLpuhWPJvGa0GssNyjvMqFMB0rSGUQb0",
+        "https://meowrhino.neocities.org/img/glub.png",
+        "https://meowrhino.neocities.org/projects/insta/4444.png"
+      ]
+    },
+    {
+      "name": "odin-recipes",
+      "links": [
+        "https://meowrhino.github.io/odin-recipes/"
+      ]
+    }
+  ],
+  "hidden": [
+    {
+      "name": "blogs adolescentes",
+      "links": [
+        "https://aheartthatrescueshearts.blogspot.com/",
+        "https://freefromninepointeight.blogspot.com/"
+      ]
+    },
+    {
+      "name": "mi primera web",
+      "links": [
+        "https://lethe0.tumblr.com/"
+      ]
+    }
+  ]
+}
