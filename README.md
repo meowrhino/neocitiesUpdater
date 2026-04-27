@@ -70,33 +70,33 @@ Vive en `localStorage` bajo la key `neocitiesUpdater.v1`. Es la fuente única de
     {
       "id": "rikamichie",
       "name": "rikamichie",
-      "highlight": false,
+      "highlight": false,                // amarillo destacado en neocities
       "category": "side quests",
-      "type": "custom-domain",
-      "status": "live",
+      "type": "custom-domain",           // github-pages | custom-domain | external | neocities-asset | local-page
+      "status": "live",                  // live | wip | alpha | beta | deprecated
       "client": "rikamichie",
-      "hidden": false,
+      "hidden": false,                   // true = no sale en NINGÚN output
       "notes": "",
-      "sup": "",
-      "ghRepo": "rikamichie",
-      "hiddenStyle": false,
+      "sup": "",                         // nota pequeña <sup>
+      "ghRepo": "rikamichie",            // nombre del repo en github.com/meowrhino
+      "hiddenStyle": false,              // estilo "color:black; cursor:default" preservado del neocities
       "showIn": {
         "neocities": true,
         "clouds": true,
         "archive": true,
-        "studioTools": false,
-        "studioConvert": false,
-        "studioPortfolio": true
+        "studioTools": false,            // data.json → tools.herramientas
+        "studioConvert": false,          // data.json → tools.conversores
+        "studioPortfolio": true          // data.json → portfolio.proyectos
       },
-      "studioImage": "img/rikamichie/1.webp",
-      "studioImageCount": 2,
+      "studioImage": "img/rikamichie/1.webp",  // relativo a becasDigMeow
+      "studioImageCount": 2,                   // imagenesSecundarias del portfolio
       "links": [
-        { "label": "web",  "url": "https://rikamichie.com",                 "primary": true },
+        { "label": "web",  "url": "https://rikamichie.com",                 "primary": true  },
         { "label": "repo", "url": "https://meowrhino.github.io/rikamichie/", "primary": false }
       ]
     }
   ],
-  "nav": [ ... ],
+  "nav": [ /* enlaces del header del neocities */ ],
   "meta": { "createdAt": "...", "lastGhFetch": "..." }
 }
 ```
@@ -140,8 +140,9 @@ Botón `+ nuevo proyecto` abre un selector con presets que pre-rellenan categor�
 .
 ├── index.html               — UI con las 5 pestañas
 ├── style.css                — vars CSS, dark mode default, accent amarillo (#FFD66B)
-├── script.js                — todo el código (≈1700 líneas comentadas en bloques numerados)
+├── script.js                — todo el código (≈1940 líneas comentadas en bloques numerados)
 ├── README.md                — este archivo
+├── todo.md                  — pendientes futuros (no críticos)
 ├── brief.md                 — el brief original con que se kickeó el proyecto
 ├── data/
 │   ├── neocities-snapshot.html   — copia del index.html actual del neocities (seed inicial)
@@ -186,6 +187,20 @@ Si tocas el schema, hazlo en `makeProject()` — todos los flows (parser, +nuevo
 - **GitHub API rate limit** — sin auth son 60 req/h por IP. Cada fetch de repos consume 2 calls (148 repos = 2 páginas), así que ~30 fetches/h. Más que suficiente.
 - **Snapshots manuales** — los archivos `data/*-snapshot.*` se actualizan a mano cuando cambia el HTML/JSON real de los sitios. La GH Action de clouds se ocupa de su `proyectos.json`, pero los demás snapshots son referencias estáticas.
 - **`file://`** — si abres `index.html` con doble click el navegador bloquea los `fetch()` a los snapshots. Usa cualquier servidor estático (`python -m http.server`, Live Server de VSCode, GH Pages…).
+
+## Estado actual
+
+Funciona end-to-end:
+- ✅ parser HTML → master (126 proyectos, 12 categorías, 202 enlaces)
+- ✅ los 4 exporters (neocities html, clouds json, archive json, studio json)
+- ✅ auditor con GH API (148 repos, ~35 huérfanos detectados con las reglas por defecto)
+- ✅ health-check (limitado por CORS, ver más abajo)
+- ✅ multi-select + fusionar + bulk actions
+- ✅ presets para nuevo proyecto + auto-fill imagen del studio
+- ✅ drag&drop reorder + CRUD categorías
+- ✅ persistencia localStorage + import/export JSON
+
+Pendientes futuros (no bloqueantes): ver [`todo.md`](todo.md).
 
 ## Por si vuelves a esto en 2 años
 

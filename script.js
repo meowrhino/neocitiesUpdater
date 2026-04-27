@@ -196,7 +196,6 @@ function makeProject(overrides = {}) {
     highlight: false,
     category: state?.categories?.[0] || 'misc',
     type: 'github-pages',
-    subtype: '',
     status: 'live',
     client: '',
     hidden: false,
@@ -510,13 +509,17 @@ function sortedLinks(p) {
  *    `<ainfo>name</ainfo><a>link</a> <br>` por proyecto
  *  - separador `<br>` entre categorías
  *
- * Solo se incluyen proyectos con showIn.neocities !== false.
+ * Filtra: proyectos con showIn.neocities !== false y !p.hidden.
+ * (La categoría "hidden" se respeta — son entradas con
+ * hiddenStyle que quedan invisibles sobre fondo negro pero existen
+ * en el HTML. El flag `hidden` es distinto: oculta del todo.)
  */
 function exportNeocitiesHtml() {
   const byCat = {};
   for (const cat of state.categories) byCat[cat] = [];
   for (const p of state.projects) {
     if (!p.showIn?.neocities) continue;
+    if (p.hidden) continue;
     if (!byCat[p.category]) byCat[p.category] = [];
     byCat[p.category].push(p);
   }
