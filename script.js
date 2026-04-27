@@ -45,6 +45,7 @@ let rules = loadJSON(LS_RULES) || {
 let currentExportTab = 'neocities';
 let editingId = null;
 let orphanSelection = new Set();
+let projectSelection = new Set();
 let catManagerOpen = false;
 let studioTemplate = null; // plantilla de data.json (studio) — se carga de data/studio-snapshot.json
 
@@ -607,16 +608,29 @@ function renderProjects() {
   if (!root.children.length) {
     root.appendChild(el('div', { style: 'color: rgba(255,255,255,0.5); padding: 20px; text-align: center;' }, 'sin resultados con estos filtros.'));
   }
+  renderProjectBulkBar();
 }
 
 function renderProjectRow(p) {
   if (editingId === p.id) return renderProjectEdit(p);
 
+  const isSelected = projectSelection.has(p.id);
   const row = el('div', {
-    class: 'project-row' + ((p.hidden || p.category === 'hidden') ? ' hidden-row' : ''),
+    class: 'project-row' + ((p.hidden || p.category === 'hidden') ? ' hidden-row' : '') + (isSelected ? ' selected' : ''),
     draggable: 'true',
     dataset: { id: p.id, cat: p.category }
   });
+
+  // checkbox de selección bulk
+  const chk = el('input', { type: 'checkbox', class: 'row-chk', title: 'seleccionar para acciones múltiples' });
+  if (isSelected) chk.checked = true;
+  chk.addEventListener('change', () => {
+    if (chk.checked) projectSelection.add(p.id);
+    else projectSelection.delete(p.id);
+    row.classList.toggle('selected', chk.checked);
+    renderProjectBulkBar();
+  });
+  row.appendChild(chk);
 
   row.appendChild(el('span', { class: 'drag-handle', title: 'arrastrar para reordenar' }, '⋮⋮'));
 
@@ -630,6 +644,9 @@ function renderProjectRow(p) {
   if (p.sup) nameBlock.appendChild(el('span', { class: 'p-name-sup' }, p.sup));
   nameBlock.appendChild(el('div', { class: 'p-meta' }, `${p.type} · ${p.status}${p.client ? ' · ' + p.client : ''}`));
   row.appendChild(nameBlock);
+
+  // badges de publicación: N C A S
+  row.appendChild(renderPubBadges(p));
 
   // links (neocities-style: [label] text)
   const linksBox = el('div', { class: 'p-links' });
@@ -779,6 +796,125 @@ function renderProjectEdit(p) {
     el('button', { onclick: cancel }, 'cancelar')
   ));
   return box;
+}
+
+function renderPubBadges(p) {
+  const studioOn = p.showIn?.studioTools || p.showIn?.studioConvert || p.showIn?.studioPortfolio;
+  const tooltip = [
+    'N=neocities, C=clouds, A=archive, S=studio',
+    `neocities: ${p.showIn?.neocities ? 'sí' : 'no'}`,
+    `clouds: ${p.showIn?.clouds ? 'sí' : 'no'}`,
+    `archive: ${p.showIn?.archive ? 'sí' : 'no'}`,
+    `studio: ${p.showIn?.studioTools ? 'tools ' : ''}${p.showIn?.studioConvert ? 'conv ' : ''}${p.showIn?.studioPortfolio ? 'portfolio' : ''}`.trim() || 'studio: no',
+  ].join('\n');
+  return el('div', { class: 'pub-badges', title: tooltip },
+    el('span', { class: p.showIn?.neocities ? 'on' : '' }, 'N'),
+    el('span', { class: p.showIn?.clouds ? 'on' : '' }, 'C'),
+    el('span', { class: p.showIn?.archive ? 'on' : '' }, 'A'),
+    el('span', { class: studioOn ? 'on' : '' }, 'S'),
+  );
+}
+
+function renderProjectBulkBar() {
+  const bar = $('#project-bulk-bar');
+  const n = projectSelection.size;
+  bar.hidden = n === 0;
+  if (!n) return;
+  $('#proj-selected-count').textContent = `${n} seleccionado${n !== 1 ? 's' : ''}`;
+  const sel = $('#bulk-cat-select');
+  sel.innerHTML = '';
+  for (const c of state.categories) sel.appendChild(el('option', { value: c }, c));
+}
+
+function bulkClearSelection() {
+  projectSelection.clear();
+  renderProjects();
+  renderProjectBulkBar();
+}
+
+function bulkChangeCategory() {
+  const cat = $('#bulk-cat-select').value;
+  if (!confirm(`mover ${projectSelection.size} proyectos a "${cat}"?`)) return;
+  for (const p of state.projects) if (projectSelection.has(p.id)) p.category = cat;
+  projectSelection.clear();
+  saveState();
+  renderProjects();
+  renderProjectBulkBar();
+  toast('movidos');
+}
+
+function bulkToggleHidden() {
+  // si TODOS están escondidos, los muestra; si no, los esconde
+  const sel = state.projects.filter(p => projectSelection.has(p.id));
+  const allHidden = sel.every(p => p.hidden);
+  for (const p of sel) p.hidden = !allHidden;
+  saveState();
+  renderProjects();
+  toast(allHidden ? 'mostrados' : 'escondidos');
+}
+
+function bulkDelete() {
+  const n = projectSelection.size;
+  if (!confirm(`borrar ${n} proyectos? esta acción no se puede deshacer.`)) return;
+  state.projects = state.projects.filter(p => !projectSelection.has(p.id));
+  projectSelection.clear();
+  saveState();
+  renderProjects();
+  renderProjectBulkBar();
+  toast(`${n} borrados`);
+}
+
+function bulkMerge() {
+  const ids = [...projectSelection];
+  if (ids.length < 2) { alert('selecciona al menos 2 proyectos para fusionar.'); return; }
+  const sel = ids.map(id => state.projects.find(p => p.id === id)).filter(Boolean);
+  const names = sel.map(p => p.name);
+  const primaryName = prompt(`¿cuál es el proyecto PRINCIPAL? (nombre, categoría, flags e imagen se conservan de éste)\n\n${names.map((n, i) => (i + 1) + '. ' + n).join('\n')}\n\nescribe el número (o cancela):`, '1');
+  if (!primaryName) return;
+  const primaryIdx = parseInt(primaryName, 10) - 1;
+  if (isNaN(primaryIdx) || primaryIdx < 0 || primaryIdx >= sel.length) { alert('número inválido'); return; }
+
+  const primary = sel[primaryIdx];
+  const others = sel.filter(p => p !== primary);
+
+  // reúne todos los links (primario primero, luego los demás)
+  // dedupea por url
+  const seen = new Set(primary.links.map(l => (l.url || '').toLowerCase()));
+  for (const p of others) {
+    for (const l of p.links) {
+      const k = (l.url || '').toLowerCase();
+      if (!k || seen.has(k)) continue;
+      seen.add(k);
+      // hereda primary del proyecto principal de origen, pero quita la flag (solo uno puede ser primary global)
+      primary.links.push({ ...l, primary: false });
+    }
+  }
+  // si primary no tiene primary marcado, marcarlo en custom-domain o primer link
+  if (!primary.links.some(l => l.primary) && primary.links.length) {
+    const idx = primary.links.findIndex(l => inferLinkType(l.url) === 'custom-domain');
+    primary.links[idx >= 0 ? idx : 0].primary = true;
+  }
+
+  // une notas
+  const allNotes = [primary.notes, ...others.map(p => `[${p.name}] ${p.notes || ''}`)].map(s => (s || '').trim()).filter(Boolean);
+  primary.notes = allNotes.join('\n\n');
+
+  // une showIn (OR lógico)
+  for (const p of others) {
+    for (const k of Object.keys(p.showIn || {})) {
+      if (p.showIn[k]) primary.showIn[k] = true;
+    }
+  }
+
+  // borra los otros
+  const otherIds = new Set(others.map(p => p.id));
+  state.projects = state.projects.filter(p => !otherIds.has(p.id));
+
+  projectSelection.clear();
+  saveState();
+  renderProjects();
+  renderProjectBulkBar();
+  toast(`fusionados ${others.length} en "${primary.name}"`);
 }
 
 function toggleHidden(id) {
@@ -1483,6 +1619,13 @@ function init() {
     .forEach(id => $('#'+id).addEventListener('input', renderProjects));
   $('#btn-new-project').addEventListener('click', newProject);
   $('#btn-manage-cats').addEventListener('click', toggleCatManager);
+
+  // bulk bar
+  $('#btn-bulk-merge').addEventListener('click', bulkMerge);
+  $('#btn-bulk-cat').addEventListener('click', bulkChangeCategory);
+  $('#btn-bulk-hide').addEventListener('click', bulkToggleHidden);
+  $('#btn-bulk-delete').addEventListener('click', bulkDelete);
+  $('#btn-bulk-clear').addEventListener('click', bulkClearSelection);
 
   $('#btn-fetch-gh').addEventListener('click', fetchGh);
   $('#btn-orphan-batch-add').addEventListener('click', applyOrphanBatch);
