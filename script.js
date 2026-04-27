@@ -1,8 +1,40 @@
 /* ================================================================
-   neocitiesUpdater — tool de sync y mantenimiento
-   - fuente única: master JSON en localStorage
-   - parser: neocities index.html → master
-   - exporters: neocities html, clouds proyectos.json, archive-data.json
+   neocitiesUpdater — tool de mantenimiento de los 4 sitios de meowrhino
+   ================================================================
+
+   Single-page (HTML+CSS+JS vanilla, sin frameworks, sin build).
+   Fuente única: un JSON en localStorage. Genera 4 outputs a partir
+   de él:
+
+     1. neocities/index.html    (lista pública, hand-coded)
+     2. clouds/proyectos.json   (consumido por meowrhino.github.io/clouds)
+     3. archive-data.json       (subpágina archive del studio)
+     4. studio/data.json        (página principal meowrhino.studio:
+                                 cupon + statement + tools + portfolio…)
+
+   Las constantes principales y el factory makeProject() definen la
+   forma del schema. Si cambias el schema, hazlo solo en estos dos
+   sitios — el resto del código los respeta.
+
+   Estructura del fichero (en orden):
+
+     1. CONSTANTES                  (categorías, mapas, presets, GH API URL)
+     2. STATE GLOBAL + LOCALSTORAGE (loadState/saveState/loadJSON/saveJSON)
+     3. FACTORY makeProject()       (la fuente de verdad del schema)
+     4. HELPERS                     ($, $$, el, uid, escapeHtml, toast)
+     5. INFERENCIA DE TIPOS         (inferLinkType, ghRepoFromUrl)
+     6. PARSER                      (neocities html → master JSON)
+     7. EXPORTERS                   (4 funciones, una por destino)
+     8. RENDER                      (dashboard, projects, auditor, health, export)
+     9. MUTACIONES DE STATE         (CRUD proyectos, merge, drag, categorías)
+    10. AUDITOR                     (fetch GH + diff + reglas)
+    11. HEALTH CHECK                (ping de links)
+    12. EXPORT TAB                  (regenerar, copiar, descargar)
+    13. IMPORT/EXPORT MASTER JSON   (backup completo)
+    14. THEME                       (light/dark)
+    15. SEED                        (auto-load + paste HTML)
+    16. INIT                        (DOMContentLoaded handler)
+
    ================================================================ */
 
 const LS_KEY = 'neocitiesUpdater.v1';
@@ -33,6 +65,95 @@ const ARCHIVE_CAT_MAP = {
 
 const GH_API_BASE = 'https://api.github.com/users/meowrhino/repos?per_page=100';
 
+/**
+ * Presets para "+ nuevo proyecto". Cada preset preconfigura categoría,
+ * tipo, flags showIn y, opcionalmente, links de plantilla con hints.
+ *
+ * Si autoStudioImage es true, al guardar se rellena studioImage como
+ * `img/${slug}/1.webp` (estándar del repo becasDigMeow).
+ */
+const PROJECT_PRESETS = {
+  cliente: {
+    label: 'cliente (web a medida con dominio propio)',
+    category: 'side quests',
+    type: 'custom-domain',
+    status: 'live',
+    showIn: { neocities: true, clouds: true, archive: true, studioPortfolio: true },
+    autoStudioImage: true,
+    studioImageCount: 1,
+    links: [
+      { label: 'web', url: '', primary: true },
+      { label: 'repo', url: '', primary: false },
+    ],
+  },
+  cliente_wip: {
+    label: 'cliente · en proceso (sin dominio aún)',
+    category: 'WIP',
+    type: 'github-pages',
+    status: 'wip',
+    showIn: { neocities: true, clouds: true, archive: true },
+    links: [
+      { label: 'WIP', url: '', primary: true },
+    ],
+  },
+  tool: {
+    label: 'tool / utilidad',
+    category: 'tools',
+    type: 'github-pages',
+    status: 'live',
+    showIn: { neocities: true, clouds: true, archive: true, studioTools: true },
+    links: [{ label: 'link', url: '', primary: true }],
+  },
+  conversor: {
+    label: 'tool · conversor (img, vídeo, formato…)',
+    category: 'tools',
+    type: 'github-pages',
+    status: 'live',
+    showIn: { neocities: true, clouds: true, archive: true, studioConvert: true },
+    links: [{ label: 'link', url: '', primary: true }],
+  },
+  juego: {
+    label: 'juego',
+    category: 'games',
+    type: 'github-pages',
+    status: 'live',
+    showIn: { neocities: true, clouds: true, archive: true },
+    links: [{ label: 'link', url: '', primary: true }],
+  },
+  experimento: {
+    label: 'experimento / arte',
+    category: 'experiments',
+    type: 'github-pages',
+    status: 'live',
+    showIn: { neocities: true, clouds: true, archive: true },
+    links: [{ label: 'link', url: '', primary: true }],
+  },
+  texto: {
+    label: 'texto / nota / ensayo',
+    category: 'texts',
+    type: 'github-pages',
+    status: 'live',
+    showIn: { neocities: true, clouds: true, archive: true },
+    links: [{ label: 'link', url: '', primary: true }],
+  },
+  social: {
+    label: 'app social / chat',
+    category: 'social apps',
+    type: 'github-pages',
+    status: 'live',
+    showIn: { neocities: true, clouds: true, archive: true },
+    links: [{ label: 'link', url: '', primary: true }],
+  },
+  vacio: {
+    label: 'en blanco · todo a mano',
+    category: null, // primera del state
+    type: 'github-pages',
+    status: 'live',
+    showIn: { neocities: true, clouds: true, archive: true },
+    links: [{ label: 'link', url: '', primary: true }],
+  },
+};
+
 /* -------------------- state -------------------- */
 
 let state = loadState() || makeEmptyState();
@@ -57,6 +178,49 @@ function makeEmptyState() {
     nav: defaultNav(),
     meta: { createdAt: new Date().toISOString(), lastGhFetch: null }
   };
+}
+
+/**
+ * Factory canónico de proyectos. Garantiza que TODOS los proyectos que se
+ * crean en cualquier flow (parser, "+ nuevo", auditor batch, addFromRepo)
+ * tienen exactamente la misma forma. Si añades un campo nuevo al schema,
+ * añádelo aquí y todos los flows lo heredan.
+ *
+ * @param {object} overrides — campos a sobreescribir sobre el default
+ * @returns {object} proyecto válido
+ */
+function makeProject(overrides = {}) {
+  const base = {
+    id: '',
+    name: '',
+    highlight: false,
+    category: state?.categories?.[0] || 'misc',
+    type: 'github-pages',
+    subtype: '',
+    status: 'live',
+    client: '',
+    hidden: false,
+    notes: '',
+    sup: '',
+    showIn: {
+      neocities: true,
+      clouds: true,
+      archive: true,
+      studioTools: false,
+      studioConvert: false,
+      studioPortfolio: false,
+    },
+    studioImage: '',
+    studioImageCount: 0,
+    links: [],
+    ghRepo: null,
+    hiddenStyle: false,
+  };
+  // merge profundo solo en showIn (lo demás no anida)
+  const merged = { ...base, ...overrides };
+  merged.showIn = { ...base.showIn, ...(overrides.showIn || {}) };
+  merged.links = (overrides.links || base.links).map(l => ({ ...l }));
+  return merged;
 }
 
 function defaultNav() {
@@ -206,6 +370,26 @@ function inferProjectType(project) {
 
 /* -------------------- parser -------------------- */
 
+/**
+ * Parsea el HTML del index del neocities y devuelve un master JSON.
+ *
+ * Convenciones que asume sobre el HTML (las pone tú a mano cuando
+ * editas neocities, pero el exporter las respeta también):
+ *
+ *  - Los proyectos viven dentro de #proyectes
+ *  - Cada categoría empieza con un comentario HTML (`<!--tools-->`)
+ *  - Cada proyecto se abre con `<ainfo>nombre</ainfo>` opcionalmente
+ *    seguido de `<sup>nota pequeña</sup>` y luego N `<a href>label</a>`
+ *  - Inline-style `color: #FFD66B` en `<ainfo>` = highlight (amarillo)
+ *  - Inline-style `color:black; cursor:default` = entrada de la
+ *    sección "hidden" (pintada invisible sobre fondo negro)
+ *
+ * Devuelve un state válido (mismo shape que makeEmptyState).
+ * Lanza si no encuentra #proyectes.
+ *
+ * @param {string} htmlString  contenido del index.html
+ * @returns {object} master state listo para guardar
+ */
 function parseNeocitiesHtml(htmlString) {
   const doc = new DOMParser().parseFromString(htmlString, 'text/html');
   const container = doc.querySelector('#proyectes') || doc.body;
@@ -256,32 +440,17 @@ function parseNeocitiesHtml(htmlString) {
       const style = node.getAttribute('style') || '';
       const highlight = /#FFD66B/i.test(style);
       const isHiddenStyle = /cursor:\s*default/i.test(style) || /color:\s*black/i.test(style);
-      cur = {
-        id: '',
+      cur = makeProject({
         name: node.textContent.trim(),
         highlight,
         category: isHiddenStyle ? 'hidden' : currentCategory,
         type: 'external',
-        subtype: '',
-        status: 'live',
-        client: '',
-        hidden: false,
-        notes: '',
-        sup: '',
         showIn: {
-          neocities: true,
           clouds: currentCategory !== 'hidden',
           archive: currentCategory !== 'hidden',
-          studioTools: false,
-          studioConvert: false,
-          studioPortfolio: false,
         },
-        studioImage: '',
-        studioImageCount: 0,
-        links: [],
-        ghRepo: null,
         hiddenStyle: isHiddenStyle,
-      };
+      });
       continue;
     }
 
@@ -331,6 +500,18 @@ function sortedLinks(p) {
   return out;
 }
 
+/**
+ * Genera el index.html del neocities a partir del state.
+ *
+ * Respeta exactamente la convención del HTML hand-coded para que
+ * round-trip parser→export no introduzca cambios:
+ *  - cabecera con marqueebar + nav + #proyectes
+ *  - dentro de #proyectes: comentario por categoría + bloques
+ *    `<ainfo>name</ainfo><a>link</a> <br>` por proyecto
+ *  - separador `<br>` entre categorías
+ *
+ * Solo se incluyen proyectos con showIn.neocities !== false.
+ */
 function exportNeocitiesHtml() {
   const byCat = {};
   for (const cat of state.categories) byCat[cat] = [];
@@ -404,6 +585,15 @@ function projectToNeocitiesLine(p) {
   return `      <ainfo${ainfoStyle}>${escapeHtml(p.name)}</ainfo>${supHtml}\n${linksHtml} <br>`;
 }
 
+/**
+ * Genera el proyectos.json que consume meowrhino.github.io/clouds.
+ * Formato simple: `{ "categoría": [{ name, links: [url, url] }] }`.
+ * Filtra por showIn.clouds y omite los hidden.
+ *
+ * Nota: hay una GitHub Action en el repo clouds que también hace
+ * esto (parseando neocities directamente). Las dos rutas están
+ * sincronizadas siempre que uses el mismo parser.
+ */
 function exportCloudsJson() {
   const out = {};
   for (const cat of state.categories) {
@@ -418,6 +608,25 @@ function exportCloudsJson() {
   return JSON.stringify(out, null, 2);
 }
 
+/**
+ * Genera el data.json del studio (meowrhino.studio página principal).
+ *
+ * Importante: el data.json contiene mucho más que proyectos —
+ * tiene cupon, statement, metodología, políticas, contacto. Esos
+ * NO se tocan: se preservan tal cual del template `data/studio-
+ * snapshot.json`. Solo se regeneran 3 secciones:
+ *
+ *   - tools.herramientas  ← projects con showIn.studioTools
+ *   - tools.conversores   ← projects con showIn.studioConvert
+ *   - portfolio.proyectos ← projects con showIn.studioPortfolio
+ *
+ * Para portfolio, si un proyecto tiene 2+ links de tipo custom-
+ * domain, se exporta como `{nombre, urls: [{nombre, url}, …]}` (el
+ * formato que usa data.json para mokakopaTwins). Si solo tiene 1,
+ * se exporta como `{nombre, url}`.
+ *
+ * Si el snapshot no se ha cargado, devuelve un mensaje explicativo.
+ */
 function exportStudioJson() {
   if (!studioTemplate) {
     return '// el template data/studio-snapshot.json no se ha cargado.\n// dale a "auto-cargar" en inicio, o importa manualmente.';
@@ -468,6 +677,16 @@ function exportStudioJson() {
   return JSON.stringify(out, null, 2);
 }
 
+/**
+ * Genera el archive-data.json (subpágina archive del studio).
+ * Las claves se mapean del castellano "main quests" a camelCase
+ * "mainQuests" según ARCHIVE_CAT_MAP (eso es lo que el JS del
+ * archive espera).
+ *
+ * Cada proyecto se exporta como:
+ *   - `{nombre, url}` si tiene un solo link
+ *   - `{nombre, links: [{label, url}]}` si tiene varios
+ */
 function exportArchiveJson() {
   const out = {
     welcome: { titulo: 'meowrhino archive', studioUrl: 'index.html' }
@@ -477,7 +696,6 @@ function exportArchiveJson() {
     const items = state.projects
       .filter(p => p.category === cat && p.showIn?.archive !== false && !p.hidden);
     if (!items.length) continue;
-    const links = sortedLinks;
     out[key] = items.map(p => {
       const ls = sortedLinks(p);
       if (ls.length === 1) return { nombre: p.name, url: ls[0].url };
@@ -579,8 +797,9 @@ function renderProjects() {
     if (ftype && p.type !== ftype) return false;
     if (fstatus && p.status !== fstatus) return false;
     if (q) {
-      const hay = [p.name, p.id, p.client, p.ghRepo, ...p.links.map(l => l.url), ...p.links.map(l => l.label)]
-        .filter(Boolean).join(' ').toLowerCase();
+      // optimización: una sola pasada por links en vez de dos
+      const linkText = p.links.reduce((acc, l) => acc + ' ' + (l.url || '') + ' ' + (l.label || ''), '');
+      const hay = (p.name + ' ' + p.id + ' ' + (p.client || '') + ' ' + (p.ghRepo || '') + linkText).toLowerCase();
       if (!hay.includes(q)) return false;
     }
     return true;
@@ -634,8 +853,20 @@ function renderProjectRow(p) {
 
   row.appendChild(el('span', { class: 'drag-handle', title: 'arrastrar para reordenar' }, '⋮⋮'));
 
-  // name block (ainfo-style)
+  // name block (ainfo-style) — opcionalmente con thumbnail
   const nameBlock = el('div', { class: 'p-name-block' });
+  if (p.studioImage && p.showIn?.studioPortfolio) {
+    // las imágenes viven en becasDigMeow GH Pages — URL absoluta para evitar
+    // problemas si la tool corre en localhost o en otra ruta
+    const thumbUrl = `https://meowrhino.github.io/becasDigMeow/${p.studioImage}`;
+    nameBlock.appendChild(el('img', {
+      class: 'p-thumb',
+      src: thumbUrl,
+      alt: '',
+      loading: 'lazy',
+      onerror: function() { this.style.display = 'none'; },
+    }));
+  }
   const primary = p.links.find(l => l.primary);
   const nameEl = primary
     ? el('a', { class: 'p-name' + (p.highlight ? ' highlight' : ''), href: primary.url, target: '_blank', rel: 'noopener' }, p.name)
@@ -713,6 +944,16 @@ function renderProjectEdit(p) {
   f.siStTool  = chkbox('studio · tools (herramientas)', !!p.showIn?.studioTools);
   f.siStConv  = chkbox('studio · tools (conversores)', !!p.showIn?.studioConvert);
   f.siStPort  = chkbox('studio · portfolio', !!p.showIn?.studioPortfolio);
+  // si se activa portfolio sin imagen, auto-rellena con img/${slug}/1.webp
+  f.siStPort.input.addEventListener('change', () => {
+    if (f.siStPort.input.checked && !f.stImg.input.value.trim()) {
+      const slug = (f.id.input.value || p.id || '').trim().toLowerCase();
+      if (slug) {
+        f.stImg.input.value = `img/${slug}/1.webp`;
+        if (!f.stImgN.input.value || f.stImgN.input.value === '0') f.stImgN.input.value = '1';
+      }
+    }
+  });
   box.appendChild(el('div', { class: 'full row' }, f.highlight.lbl, f.hidden.lbl, f.siNeo.lbl, f.siCloud.lbl, f.siArch.lbl));
   box.appendChild(el('div', { class: 'full row' }, f.siStTool.lbl, f.siStConv.lbl, f.siStPort.lbl));
 
@@ -864,6 +1105,19 @@ function bulkDelete() {
   toast(`${n} borrados`);
 }
 
+/**
+ * Fusiona N proyectos seleccionados en uno solo.
+ *
+ * El user elige el "principal" via prompt; ese proyecto conserva
+ * nombre, categoría, status, flags, imagen del studio. Los enlaces
+ * de los demás se appendan (dedupeando por URL). Las notas se
+ * concatenan. Los flags showIn se hacen OR (si cualquiera estaba
+ * publicado en archive, el resultado también).
+ *
+ * Caso de uso: valentin / valentin2 / valentin3 pasan a ser un
+ * solo proyecto "valentin" con 3 links etiquetados [v3] [v2] [v1]
+ * más el [web] cuando llegue el dominio.
+ */
 function bulkMerge() {
   const ids = [...projectSelection];
   if (ids.length < 2) { alert('selecciona al menos 2 proyectos para fusionar.'); return; }
@@ -932,32 +1186,54 @@ function deleteProject(id) {
   renderProjects();
 }
 
-function newProject() {
-  const p = {
+/**
+ * Crea un proyecto nuevo a partir de un preset (ver PROJECT_PRESETS).
+ * Si presetKey es null/undefined, abre el selector de preset.
+ */
+function newProject(presetKey) {
+  if (presetKey === undefined) return openPresetPicker();
+  const preset = PROJECT_PRESETS[presetKey] || PROJECT_PRESETS.vacio;
+  const p = makeProject({
     id: uid('nuevo'),
     name: 'nuevo proyecto',
-    highlight: false,
-    category: state.categories[0],
-    type: 'github-pages',
-    subtype: '',
-    status: 'live',
-    client: '',
-    hidden: false,
-    notes: '',
-    sup: '',
-    showIn: { neocities: true, clouds: true, archive: true, studioTools: false, studioConvert: false, studioPortfolio: false },
-    studioImage: '',
-    studioImageCount: 0,
-    links: [{ label: 'link', url: '', primary: true }],
-    ghRepo: null,
-    hiddenStyle: false,
-  };
+    category: preset.category || state.categories[0],
+    type: preset.type,
+    status: preset.status,
+    showIn: preset.showIn,
+    links: preset.links?.length ? preset.links : [{ label: 'link', url: '', primary: true }],
+  });
+  // marca preset key para que el edit form pueda hacer auto-fill de la imagen
+  p._preset = presetKey;
   state.projects.unshift(p);
   editingId = p.id;
   saveState();
   renderProjects();
-  // scroll to top
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function openPresetPicker() {
+  // overlay con la lista de presets
+  const existing = $('#preset-overlay');
+  if (existing) existing.remove();
+  const overlay = el('div', { id: 'preset-overlay', class: 'overlay' });
+  const card = el('div', { class: 'overlay-card' });
+  card.appendChild(el('h2', {}, '¿qué tipo de proyecto?'));
+  card.appendChild(el('p', { class: 'subtle' }, 'esto es solo el punto de partida. luego puedes editarlo todo.'));
+  for (const [key, preset] of Object.entries(PROJECT_PRESETS)) {
+    const cat = preset.category || state.categories[0] || 'misc';
+    const destinos = Object.entries(preset.showIn || {})
+      .filter(([_, v]) => v)
+      .map(([k]) => k.replace('studio', 's:'))
+      .join(', ');
+    const btn = el('button', { class: 'preset-btn', onclick: () => { overlay.remove(); newProject(key); } },
+      el('b', {}, preset.label),
+      el('span', { class: 'subtle' }, `→ ${cat} · publicar en: ${destinos}`)
+    );
+    card.appendChild(btn);
+  }
+  card.appendChild(el('button', { class: 'ghost', onclick: () => overlay.remove() }, 'cancelar'));
+  overlay.appendChild(card);
+  document.body.appendChild(overlay);
 }
 
 /* -------------------- categorías CRUD -------------------- */
@@ -1096,6 +1372,11 @@ function reorderProject(fromId, toId, before) {
 
 /* -------------------- auditor -------------------- */
 
+/**
+ * Llama a la API de GitHub para listar todos los repos públicos
+ * de meowrhino. Sin auth (límite 60 req/h, suficiente).
+ * 148 repos = 2 páginas de 100. Guarda timestamp en state.meta.
+ */
 async function fetchGh() {
   const statusEl = $('#gh-status');
   statusEl.textContent = 'cargando…';
@@ -1275,23 +1556,15 @@ function applyOrphanBatch() {
       url: `https://meowrhino.github.io/${r.name}/`,
       primary: i === 0,
     }));
-    const p = {
+    const p = makeProject({
       id: uid(name),
       name,
-      highlight: false,
       category: cat,
       type: 'github-pages',
-      subtype: '',
-      status: 'live',
-      client: '',
-      hidden: false,
       notes: reposSelected.map(r => `${r.name}: ${r.description || ''}`).filter(Boolean).join('\n'),
-      sup: '',
-      showIn: { neocities: true, clouds: true, archive: true },
       links,
       ghRepo: reposSelected[0].name,
-      hiddenStyle: false,
-    };
+    });
     state.projects.push(p);
     toast(`creado "${name}" con ${reposSelected.length} enlaces`);
   } else {
@@ -1337,25 +1610,16 @@ function guessCategoryForRepo(repo) {
 }
 
 function addProjectFromRepo(repo, category) {
-  const p = {
+  const p = makeProject({
     id: uid(repo.name),
     name: repo.name,
-    highlight: false,
     category,
     type: 'github-pages',
-    subtype: '',
     status: repo.archived ? 'deprecated' : 'live',
-    client: '',
-    hidden: false,
     notes: repo.description || '',
-    sup: '',
-    showIn: { neocities: true, clouds: true, archive: true, studioTools: false, studioConvert: false, studioPortfolio: false },
-    studioImage: '',
-    studioImageCount: 0,
     links: [{ label: 'link', url: `https://meowrhino.github.io/${repo.name}/`, primary: true }],
     ghRepo: repo.name,
-    hiddenStyle: false,
-  };
+  });
   state.projects.push(p);
   saveState();
   toast(`añadido: ${repo.name}`);
@@ -1522,6 +1786,15 @@ async function loadStudioTemplate() {
   } catch (_) { /* ignore */ }
 }
 
+/**
+ * Después de seedear el state desde el snapshot del neocities,
+ * intenta vincular cada proyecto con las secciones del studio
+ * (data.json) matcheando por URL. Si hay match, activa los
+ * flags showIn.studio* correspondientes y copia studioImage /
+ * studioImageCount del template.
+ *
+ * Devuelve cuántos matches se hicieron (para feedback al user).
+ */
 function mergeStudioFlags() {
   if (!studioTemplate) return 0;
   let hits = 0;
@@ -1617,7 +1890,7 @@ function init() {
 
   ['proj-search','proj-filter-cat','proj-filter-type','proj-filter-status']
     .forEach(id => $('#'+id).addEventListener('input', renderProjects));
-  $('#btn-new-project').addEventListener('click', newProject);
+  $('#btn-new-project').addEventListener('click', () => newProject());
   $('#btn-manage-cats').addEventListener('click', toggleCatManager);
 
   // bulk bar
@@ -1646,6 +1919,21 @@ function init() {
   });
 
   $('#btn-theme').addEventListener('click', toggleTheme);
+
+  // keyboard shortcuts globales
+  document.addEventListener('keydown', (e) => {
+    // Esc cancela el edit form abierto o cierra el preset picker
+    if (e.key === 'Escape') {
+      const overlay = $('#preset-overlay');
+      if (overlay) { overlay.remove(); return; }
+      if (editingId) { editingId = null; renderProjects(); return; }
+    }
+    // Cmd/Ctrl+S → guardar export master JSON
+    if ((e.metaKey || e.ctrlKey) && e.key === 's' && !editingId) {
+      e.preventDefault();
+      exportMasterJson();
+    }
+  });
 
   if (!state.projects.length) tryFetchSeed();
 }
