@@ -2,7 +2,7 @@
   "welcome": {
     "titulo": "meowrhino studio",
     "cupon": {
-      "precio": "485 €",
+      "precio": "600 €",
       "email": "hola@meowrhino.studio",
       "es": {
         "hazte": "tu propia web por",
@@ -53,6 +53,18 @@
   },
   "tools": {
     "herramientas": [
+      {
+        "nombre": "moixi",
+        "url": "https://meowrhino.github.io/moixi/"
+      },
+      {
+        "nombre": "retals",
+        "url": "https://meowrhino.github.io/retals/"
+      },
+      {
+        "nombre": "arxiu",
+        "url": "https://arxiu.meowrhino.studio"
+      },
       {
         "nombre": "trackr",
         "url": "https://meowrhino.github.io/trackr/"
@@ -142,48 +154,150 @@
       ]
     }
   },
-  "politicas": {
+  "footer": {
     "es": {
-      "parrafos": [
-        "diseñamos y desarrollamos páginas web a medida con tecnología jamstack. los datos de tu web los gestiona un archivo que aprendes a leer y modificar: puedes añadir, eliminar y cambiar textos, imágenes y archivos sin depender de nadie.",
-        "el código es tuyo. puedes usarlo, transformarlo, continuarlo o dárselo a quien quieras. meowrhino.studio conserva una copia de cada proyecto como registro de autoría y para garantizar que el código sea siempre libre y accesible.",
-        "no iniciamos un proyecto sin todo el material listo: textos, imágenes y contenido. también una identidad visual mínima (logo, paleta de color, tipografía). si no se dispone de ella, se puede presupuestar como parte del proyecto.",
-        "no trabajamos con placeholders.",
-        "cada proyecto incluye 2 entregas (diseño y código) y hasta 3 rondas de revisiones. cada ronda puede incluir varios cambios, pero una vez enviada, los siguientes cambios pertenecen a la siguiente ronda. cualquier cambio derivado de trabajar con material incompleto cuenta como revisión. las rondas extra se presupuestan a 60€/hora.",
-        "pago en dos fases: 50% al cerrar diseño, 50% al finalizar programación.",
-        "la primera reunión es gratuita. a partir de la primera entrega se consume parte del presupuesto. puedes parar el proyecto en cualquier momento abonando la parte proporcional de lo trabajado. si se retoma más adelante, se abre un nuevo presupuesto.",
-        "nos reservamos la posibilidad de publicar el proyecto en nuestro portfolio y redes sociales. a la finalización de la web, planteamos la posibilidad de un post conjunto en instagram.",
-        "nuestro compromiso es diseñar una web que entiendas, que puedas mantener y que pueda crecer contigo."
-      ],
-      "nota": "aceptar el presupuesto significa aceptar estas condiciones."
+      "secciones": [
+        {
+          "label": "condiciones",
+          "rotateMs": 20000,
+          "tipo": "texto",
+          "parrafos": [
+            "diseñamos y desarrollamos páginas web a medida con tecnología jamstack. los datos de tu web los gestiona un archivo que aprendes a leer y modificar: puedes añadir, eliminar y cambiar textos, imágenes y archivos sin depender de nadie.",
+            "el código es tuyo. puedes usarlo, transformarlo, continuarlo o dárselo a quien quieras. meowrhino.studio conserva una copia de cada proyecto como registro de autoría y para garantizar que el código sea siempre libre y accesible.",
+            "no iniciamos un proyecto sin todo el material listo: textos, imágenes y contenido. también una identidad visual mínima (logo, paleta de color, tipografía). si no se dispone de ella, se puede presupuestar como parte del proyecto.",
+            "no trabajamos con placeholders.",
+            "cada proyecto incluye 2 entregas (diseño y código) y hasta 3 rondas de revisiones. cada ronda puede incluir varios cambios, pero una vez enviada, los siguientes cambios pertenecen a la siguiente ronda. cualquier cambio derivado de trabajar con material incompleto cuenta como revisión. las rondas extra se presupuestan a 60€/hora.",
+            "pago en dos fases: 50% al cerrar diseño, 50% al finalizar programación.",
+            "la primera reunión es gratuita. a partir de la primera entrega se consume parte del presupuesto. puedes parar el proyecto en cualquier momento abonando la parte proporcional de lo trabajado. si se retoma más adelante, se abre un nuevo presupuesto.",
+            "nos reservamos la posibilidad de publicar el proyecto en nuestro portfolio y redes sociales. a la finalización de la web, planteamos la posibilidad de un post conjunto en instagram.",
+            "nuestro compromiso es diseñar una web que entiendas, que puedas mantener y que pueda crecer contigo."
+          ],
+          "nota": "aceptar el presupuesto significa aceptar estas condiciones."
+        },
+        {
+          "label": "privacidad",
+          "rotateMs": 15000,
+          "tipo": "texto",
+          "parrafos": [
+            "<strong>responsable:</strong> manuel latour fernández, dni 45382378-c, c. peracamps 9, 08001 barcelona. contacto: <a href=\"mailto:hola@meowrhino.studio\">hola@meowrhino.studio</a>.",
+            "<strong>cookies:</strong> esta web pasa por <a href=\"https://www.cloudflare.com/web-analytics/\" target=\"_blank\" rel=\"noopener\">cloudflare</a> como cdn. cookies estrictamente necesarias, todas de cloudflare, inc.: __cf_bm (bot management, 30 min), cf_clearance (bypass anti-bot, 30 min a 1 año), __cflb (load balancing, sesión). exentas de consentimiento bajo <a href=\"https://www.boe.es/buscar/act.php?id=BOE-A-2002-13758#a22\" target=\"_blank\" rel=\"noopener\">lssi-ce art. 22.2</a>.",
+            "<strong>analítica:</strong> cloudflare web analytics, sin cookies, sin fingerprinting, agregada y anonimizada. retención 6 meses. base legal: interés legítimo (<a href=\"https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:32016R0679\" target=\"_blank\" rel=\"noopener\">gdpr art. 6.1.f</a>).",
+            "<strong>transferencias:</strong> cloudflare puede procesar datos en USA bajo el <a href=\"https://commission.europa.eu/document/fa09cbad-dd7d-4684-ae60-be03fcb0fddf_en\" target=\"_blank\" rel=\"noopener\">eu-us data privacy framework</a> (2023).",
+            "<strong>tus derechos:</strong> acceso, rectificación, supresión, oposición, portabilidad y limitación. escribe a <a href=\"mailto:hola@meowrhino.studio\">hola@meowrhino.studio</a>.",
+            "<strong>reclamación:</strong> si crees que no se respetan tus derechos, puedes presentar reclamación ante la <a href=\"https://www.aepd.es\" target=\"_blank\" rel=\"noopener\">aepd</a>.",
+            "<em>última actualización: mayo 2026.</em>"
+          ]
+        },
+        {
+          "label": "financiación",
+          "rotateMs": 8000,
+          "tipo": "subvencion",
+          "intro": "esta web es posible gracias al apoyo de:",
+          "logos": [
+            { "name": "gene", "alt": "Generalitat de Catalunya — Departament d'Empresa i Treball" },
+            { "name": "eu", "alt": "Cofinanciado por la Unión Europea" },
+            { "name": "sepe", "alt": "Ministerio de Trabajo y Economía Social, SEPE" },
+            { "name": "garantia", "alt": "Sistema Nacional de Garantía Juvenil" }
+          ],
+          "frase": "Aquesta actuació està impulsada i subvencionada pel Departament d'Empresa i Treball i cofinançada per la Unió Europea mitjançant el Fons Social Europeu Plus."
+        }
+      ]
     },
     "en": {
-      "parrafos": [
-        "we design and develop custom websites using jamstack technology. your website data is managed through a file you learn to read and edit: you can add, remove and change texts, images and files without depending on anyone.",
-        "the code is yours. you can use it, transform it, continue it or give it to whoever you want. meowrhino.studio keeps a copy of each project as a record of authorship and to ensure the code remains free and accessible.",
-        "we do not start a project without all the material ready: texts, images and content. also a minimal visual identity (logo, colour palette, typography). if you don't have one, it can be quoted as part of the project.",
-        "we don't work with placeholders.",
-        "each project includes 2 deliveries (design and code) and up to 3 rounds of revisions. each round may include several changes, but once submitted, subsequent changes belong to the next round. any change resulting from working with incomplete material counts as a revision. extra rounds are billed at 60€/hour.",
-        "payment in two phases: 50% upon design sign-off, 50% upon completing development.",
-        "the first meeting is free. from the first delivery onwards, part of the budget is used. you can stop the project at any time by paying the proportional share of the work done. if resumed later, a new quote is provided.",
-        "we reserve the option to publish the project in our portfolio and social media. upon completion of the website, we'll suggest a joint instagram post.",
-        "our commitment is to design a website you understand, can maintain, and that can grow with you."
-      ],
-      "nota": "accepting the quote means accepting these conditions."
+      "secciones": [
+        {
+          "label": "terms",
+          "rotateMs": 20000,
+          "tipo": "texto",
+          "parrafos": [
+            "we design and develop custom websites using jamstack technology. your website data is managed through a file you learn to read and edit: you can add, remove and change texts, images and files without depending on anyone.",
+            "the code is yours. you can use it, transform it, continue it or give it to whoever you want. meowrhino.studio keeps a copy of each project as a record of authorship and to ensure the code remains free and accessible.",
+            "we do not start a project without all the material ready: texts, images and content. also a minimal visual identity (logo, colour palette, typography). if you don't have one, it can be quoted as part of the project.",
+            "we don't work with placeholders.",
+            "each project includes 2 deliveries (design and code) and up to 3 rounds of revisions. each round may include several changes, but once submitted, subsequent changes belong to the next round. any change resulting from working with incomplete material counts as a revision. extra rounds are billed at 60€/hour.",
+            "payment in two phases: 50% upon design sign-off, 50% upon completing development.",
+            "the first meeting is free. from the first delivery onwards, part of the budget is used. you can stop the project at any time by paying the proportional share of the work done. if resumed later, a new quote is provided.",
+            "we reserve the option to publish the project in our portfolio and social media. upon completion of the website, we'll suggest a joint instagram post.",
+            "our commitment is to design a website you understand, can maintain, and that can grow with you."
+          ],
+          "nota": "accepting the quote means accepting these conditions."
+        },
+        {
+          "label": "privacy",
+          "rotateMs": 15000,
+          "tipo": "texto",
+          "parrafos": [
+            "<strong>controller:</strong> manuel latour fernández, dni 45382378-c, c. peracamps 9, 08001 barcelona, spain. contact: <a href=\"mailto:hola@meowrhino.studio\">hola@meowrhino.studio</a>.",
+            "<strong>cookies:</strong> this site is served through <a href=\"https://www.cloudflare.com/web-analytics/\" target=\"_blank\" rel=\"noopener\">cloudflare</a> as cdn. strictly-necessary cookies, all from cloudflare, inc.: __cf_bm (bot management, 30 min), cf_clearance (anti-bot bypass, 30 min to 1 year), __cflb (load balancing, session). exempt from consent under the <a href=\"https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32002L0058\" target=\"_blank\" rel=\"noopener\">eu eprivacy directive</a>.",
+            "<strong>analytics:</strong> cloudflare web analytics, cookieless, fingerprint-free, aggregated and anonymous. 6-month retention. legal basis: legitimate interest (<a href=\"https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32016R0679\" target=\"_blank\" rel=\"noopener\">gdpr art. 6.1.f</a>).",
+            "<strong>international transfers:</strong> cloudflare may process data in the USA under the <a href=\"https://commission.europa.eu/document/fa09cbad-dd7d-4684-ae60-be03fcb0fddf_en\" target=\"_blank\" rel=\"noopener\">eu-us data privacy framework</a> (2023).",
+            "<strong>your rights:</strong> access, rectification, erasure, objection, portability and restriction. email <a href=\"mailto:hola@meowrhino.studio\">hola@meowrhino.studio</a>.",
+            "<strong>complaint:</strong> you can lodge a complaint with the spanish dpa (<a href=\"https://www.aepd.es/en\" target=\"_blank\" rel=\"noopener\">aepd</a>).",
+            "<em>last updated: may 2026.</em>"
+          ]
+        },
+        {
+          "label": "funding",
+          "rotateMs": 8000,
+          "tipo": "subvencion",
+          "intro": "this site is made possible thanks to:",
+          "logos": [
+            { "name": "gene", "alt": "Generalitat de Catalunya — Department of Enterprise and Labour" },
+            { "name": "eu", "alt": "Co-funded by the European Union" },
+            { "name": "sepe", "alt": "Ministry of Labour and Social Economy, SEPE" },
+            { "name": "garantia", "alt": "National Youth Guarantee System" }
+          ],
+          "frase": "Aquesta actuació està impulsada i subvencionada pel Departament d'Empresa i Treball i cofinançada per la Unió Europea mitjançant el Fons Social Europeu Plus."
+        }
+      ]
     },
     "cat": {
-      "parrafos": [
-        "dissenyem i desenvolupem pàgines web a mida amb tecnologia jamstack. les dades de la teva web les gestiona un arxiu que aprens a llegir i modificar: pots afegir, eliminar i canviar textos, imatges i arxius sense dependre de ningú.",
-        "el codi és teu. pots usar-lo, transformar-lo, continuar-lo o donar-lo a qui vulguis. meowrhino.studio conserva una còpia de cada projecte com a registre d'autoria i per garantir que el codi sigui sempre lliure i accessible.",
-        "no iniciem un projecte sense tot el material llest: textos, imatges i contingut. també una identitat visual mínima (logo, paleta de color, tipografia). si no es disposa d'ella, es pot pressupostar com a part del projecte.",
-        "no treballem amb placeholders.",
-        "cada projecte inclou 2 lliuraments (disseny i codi) i fins a 3 rondes de revisions. cada ronda pot incloure diversos canvis, però un cop enviada, els canvis següents pertanyen a la ronda següent. qualsevol canvi derivat de treballar amb material incomplet compta com a revisió. les rondes extra es pressuposten a 60€/hora.",
-        "pagament en dues fases: 50% en tancar disseny, 50% en finalitzar programació.",
-        "la primera reunió és gratuïta. a partir del primer lliurament es consumeix part del pressupost. pots aturar el projecte en qualsevol moment abonant la part proporcional del treball fet. si es reprèn més endavant, s'obre un nou pressupost.",
-        "ens reservem la possibilitat de publicar el projecte al nostre portfolio i xarxes socials. en finalitzar la web, plantegem la possibilitat d'un post conjunt a instagram.",
-        "el nostre compromís és dissenyar una web que entenguis, que puguis mantenir i que pugui créixer amb tu."
-      ],
-      "nota": "acceptar el pressupost significa acceptar aquestes condicions."
+      "secciones": [
+        {
+          "label": "condicions",
+          "rotateMs": 20000,
+          "tipo": "texto",
+          "parrafos": [
+            "dissenyem i desenvolupem pàgines web a mida amb tecnologia jamstack. les dades de la teva web les gestiona un arxiu que aprens a llegir i modificar: pots afegir, eliminar i canviar textos, imatges i arxius sense dependre de ningú.",
+            "el codi és teu. pots usar-lo, transformar-lo, continuar-lo o donar-lo a qui vulguis. meowrhino.studio conserva una còpia de cada projecte com a registre d'autoria i per garantir que el codi sigui sempre lliure i accessible.",
+            "no iniciem un projecte sense tot el material llest: textos, imatges i contingut. també una identitat visual mínima (logo, paleta de color, tipografia). si no es disposa d'ella, es pot pressupostar com a part del projecte.",
+            "no treballem amb placeholders.",
+            "cada projecte inclou 2 lliuraments (disseny i codi) i fins a 3 rondes de revisions. cada ronda pot incloure diversos canvis, però un cop enviada, els canvis següents pertanyen a la ronda següent. qualsevol canvi derivat de treballar amb material incomplet compta com a revisió. les rondes extra es pressuposten a 60€/hora.",
+            "pagament en dues fases: 50% en tancar disseny, 50% en finalitzar programació.",
+            "la primera reunió és gratuïta. a partir del primer lliurament es consumeix part del pressupost. pots aturar el projecte en qualsevol moment abonant la part proporcional del treball fet. si es reprèn més endavant, s'obre un nou pressupost.",
+            "ens reservem la possibilitat de publicar el projecte al nostre portfolio i xarxes socials. en finalitzar la web, plantegem la possibilitat d'un post conjunt a instagram.",
+            "el nostre compromís és dissenyar una web que entenguis, que puguis mantenir i que pugui créixer amb tu."
+          ],
+          "nota": "acceptar el pressupost significa acceptar aquestes condicions."
+        },
+        {
+          "label": "privacitat",
+          "rotateMs": 15000,
+          "tipo": "texto",
+          "parrafos": [
+            "<strong>responsable:</strong> manuel latour fernández, dni 45382378-c, c. peracamps 9, 08001 barcelona. contacte: <a href=\"mailto:hola@meowrhino.studio\">hola@meowrhino.studio</a>.",
+            "<strong>cookies:</strong> aquesta web passa per <a href=\"https://www.cloudflare.com/web-analytics/\" target=\"_blank\" rel=\"noopener\">cloudflare</a> com a cdn. cookies estrictament necessàries, totes de cloudflare, inc.: __cf_bm (gestió de bots, 30 min), cf_clearance (bypass anti-bot, 30 min a 1 any), __cflb (load balancing, sessió). exemptes de consentiment sota <a href=\"https://www.boe.es/buscar/act.php?id=BOE-A-2002-13758#a22\" target=\"_blank\" rel=\"noopener\">lssi-ce art. 22.2</a>.",
+            "<strong>analítica:</strong> cloudflare web analytics, sense cookies, sense fingerprinting, agregada i anonimitzada. retenció 6 mesos. base legal: interès legítim (<a href=\"https://eur-lex.europa.eu/legal-content/CA/TXT/?uri=CELEX:32016R0679\" target=\"_blank\" rel=\"noopener\">gdpr art. 6.1.f</a>).",
+            "<strong>transferències:</strong> cloudflare pot processar dades als USA sota l'<a href=\"https://commission.europa.eu/document/fa09cbad-dd7d-4684-ae60-be03fcb0fddf_en\" target=\"_blank\" rel=\"noopener\">eu-us data privacy framework</a> (2023).",
+            "<strong>els teus drets:</strong> accés, rectificació, supressió, oposició, portabilitat i limitació. escriu a <a href=\"mailto:hola@meowrhino.studio\">hola@meowrhino.studio</a>.",
+            "<strong>reclamació:</strong> si creus que no es respecten els teus drets, pots presentar reclamació davant l'<a href=\"https://www.aepd.es\" target=\"_blank\" rel=\"noopener\">aepd</a>.",
+            "<em>última actualització: maig 2026.</em>"
+          ]
+        },
+        {
+          "label": "finançament",
+          "rotateMs": 8000,
+          "tipo": "subvencion",
+          "intro": "aquesta web és possible gràcies al suport de:",
+          "logos": [
+            { "name": "gene", "alt": "Generalitat de Catalunya — Departament d'Empresa i Treball" },
+            { "name": "eu", "alt": "Cofinançat per la Unió Europea" },
+            { "name": "sepe", "alt": "Ministeri de Treball i Economia Social, SEPE" },
+            { "name": "garantia", "alt": "Sistema Nacional de Garantia Juvenil" }
+          ],
+          "frase": "Aquesta actuació està impulsada i subvencionada pel Departament d'Empresa i Treball i cofinançada per la Unió Europea mitjançant el Fons Social Europeu Plus."
+        }
+      ]
     }
   },
   "portfolio": {

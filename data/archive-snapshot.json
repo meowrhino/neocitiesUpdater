@@ -4,6 +4,8 @@
     "studioUrl": "index.html"
   },
   "tools": [
+    { "nombre": "moixi", "url": "https://meowrhino.github.io/moixi/" },
+    { "nombre": "retals", "url": "https://meowrhino.github.io/retals/" },
     { "nombre": "trackr", "url": "https://meowrhino.github.io/trackr/" },
     { "nombre": "webP converter", "url": "https://meowrhino.github.io/imgToWeb/" },
     { "nombre": "imgTo1600x900", "url": "https://meowrhino.github.io/imgTo1600x900/" },
@@ -157,7 +159,7 @@
   ],
   "meowrhino": [
     { "nombre": "profilePics", "url": "https://meowrhino.github.io/profilePics/" },
-    { "nombre": "arxiu.pdf", "url": "https://meowrhino.github.io/arxiu/" },
+    { "nombre": "arxiu", "links": [{ "label": "web", "url": "https://arxiu.meowrhino.studio" }, { "label": "gh", "url": "https://meowrhino.github.io/arxiu/" }] },
     {
       "nombre": "meowrhino clouds",
       "links": [
@@ -354,7 +356,9 @@
     { "nombre": "elmundodelasjordis", "links": [{ "label": "repo", "url": "https://meowrhino.github.io/jordis/" }, { "label": "web", "url": "https://elmundodelasjordis.com" }] },
     { "nombre": "berta esteve", "links": [{ "label": "repo", "url": "https://meowrhino.github.io/snerta/" }, { "label": "web", "url": "https://bertaesteve.cat" }] },
     { "nombre": "hifas studio", "url": "https://meowrhino.github.io/anakatana/" },
-    { "nombre": "villa granota", "url": "https://meowrhino.github.io/villagranota/" }
+    { "nombre": "villa granota", "url": "https://meowrhino.github.io/villagranota/" },
+    { "nombre": "noan cittadino", "url": "https://noancittadino.com" },
+    { "nombre": "930blurberrie", "url": "https://930blurberrie.com" }
   ],
   "facts": [
     "Al videojuego al que más he jugado es al Pokémon Zafiro (282 horas)",

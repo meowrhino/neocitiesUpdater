@@ -113,6 +113,18 @@
       "links": [
         "https://meowrhino.github.io/villagranota/"
       ]
+    },
+    {
+      "name": "noan cittadino",
+      "links": [
+        "https://noancittadino.com"
+      ]
+    },
+    {
+      "name": "930blurberrie",
+      "links": [
+        "https://930blurberrie.com"
+      ]
     }
   ],
   "WIP": [
@@ -150,8 +162,9 @@
       ]
     },
     {
-      "name": "arxiu.pdf",
+      "name": "arxiu",
       "links": [
+        "https://arxiu.meowrhino.studio",
         "https://meowrhino.github.io/arxiu/"
       ]
     },
@@ -189,6 +202,18 @@
     }
   ],
   "tools": [
+    {
+      "name": "moixi",
+      "links": [
+        "https://meowrhino.github.io/moixi/"
+      ]
+    },
+    {
+      "name": "retals",
+      "links": [
+        "https://meowrhino.github.io/retals/"
+      ]
+    },
     {
       "name": "trackr",
       "links": [
